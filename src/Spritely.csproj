@@ -1,0 +1,449 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C83670FE-9461-4421-A1A8-A30BEA11A239}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Spritely</RootNamespace>
+    <AssemblyName>Spritely</AssemblyName>
+    <ApplicationIcon>Resources\Spritely2.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.5.1.9189, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Forms\Main\BgImageListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\BgImageListForm.Designer.cs">
+      <DependentUpon>BgImageListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main\BgImageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\BgImageForm.Designer.cs">
+      <DependentUpon>BgImageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ColorEditor16.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ColorEditor16.Designer.cs">
+      <DependentUpon>ColorEditor16.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dialogs\BgImageProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\BgImageProperties.Designer.cs">
+      <DependentUpon>BgImageProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main\IPaletteForm.cs">
+    </Compile>
+    <Compile Include="Forms\Test\TraceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Test\TraceForm.Designer.cs">
+      <DependentUpon>TraceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Test\TutorialTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Test\TutorialTestForm.Designer.cs">
+      <DependentUpon>TutorialTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main\MapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\MapForm.Designer.cs">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Backgrounds\BgImages.cs" />
+    <Compile Include="Backgrounds\BgImage.cs" />
+    <Compile Include="Main\Debug.cs" />
+    <Compile Include="Palettes\Palette16.cs" />
+    <Compile Include="Palettes\Palette256.cs" />
+    <Compile Include="Palettes\PaletteColorData.cs" />
+    <Compile Include="Toolbox\Arrowbox.cs" />
+    <Compile Include="Toolbox\Arrowbox_Sprite.cs" />
+    <Compile Include="Toolbox\Optionbox_Sprite.cs" />
+    <Compile Include="Toolbox\Optionbox_Map.cs" />
+    <Compile Include="Toolbox\Optionbox.cs" />
+    <Compile Include="Palettes\Color555.cs" />
+    <Compile Include="Files\FileHandler_Export.cs" />
+    <Compile Include="Files\FileHandler_Load.cs" />
+    <Compile Include="Forms\Main\Palette256Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\Palette256Form.Designer.cs">
+      <DependentUpon>Palette256Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main\ProjectMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\ProjectMainForm.Designer.cs">
+      <DependentUpon>ProjectMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main\ProjectMainForm_Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\SpriteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\SpriteForm.Designer.cs">
+      <DependentUpon>SpriteForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main\SpritesetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\SpritesetForm.Designer.cs">
+      <DependentUpon>SpritesetForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Test\TempForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Test\TempForm.Designer.cs">
+      <DependentUpon>TempForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Backgrounds\Map.cs" />
+    <Compile Include="Forms\Test\CollisionTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Test\CollisionTest.Designer.cs">
+      <DependentUpon>CollisionTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Backgrounds\MapBlock.cs" />
+    <Compile Include="Backgrounds\Maps.cs" />
+    <Compile Include="Backgrounds\Map_LoadSave.cs" />
+    <Compile Include="Forms\Main\Palette16Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\Palette16Form.Designer.cs">
+      <DependentUpon>Palette16Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Palettes\Palettes.cs" />
+    <Compile Include="Sprites\Spriteset.cs" />
+    <Compile Include="Sprites\Spritesets.cs" />
+    <Compile Include="Sprites\SpriteType.cs" />
+    <Compile Include="Sprites\Sprite_LoadSave.cs" />
+    <Compile Include="Main\TabMgr.cs" />
+    <Compile Include="Toolbox\Toolbox_BgImage.cs" />
+    <Compile Include="Toolbox\Toolbox_Map.cs" />
+    <Compile Include="Forms\Dialogs\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ColorEncodingView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ColorEncodingView.Designer.cs">
+      <DependentUpon>ColorEncodingView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dialogs\Export.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\Export.Designer.cs">
+      <DependentUpon>Export.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\Document.cs" />
+    <Compile Include="Files\FileHandler.cs" />
+    <Compile Include="Forms\Dialogs\SpriteProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\SpriteProperties.Designer.cs">
+      <DependentUpon>SpriteProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Test\UndoHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Test\UndoHistoryForm.Designer.cs">
+      <DependentUpon>UndoHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\Options.cs" />
+    <Compile Include="Palettes\Subpalette.cs" />
+    <Compile Include="Palettes\Palette.cs" />
+    <Compile Include="Files\RecentFiles.cs" />
+    <Compile Include="Resources\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Main\Spritely.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\Dialogs\About.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Test\CollisionTest.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CollisionTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\ColorEditor16.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ColorEditor16.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\ColorEncodingView.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ColorEncodingView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\BgImageListForm.resx">
+      <DependentUpon>BgImageListForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\BgImageForm.resx">
+      <DependentUpon>BgImageForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\BgImageProperties.resx">
+      <DependentUpon>BgImageProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Test\TraceForm.resx">
+      <DependentUpon>TraceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Test\TutorialTestForm.resx">
+      <DependentUpon>TutorialTestForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\MapForm.resx">
+      <DependentUpon>MapForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\Palette256Form.resx">
+      <DependentUpon>Palette256Form.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\Export.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Export.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\ProjectMainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ProjectMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\SpriteForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SpriteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\SpriteProperties.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SpriteProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\SpritesetForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SpritesetForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Test\TempForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TempForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Test\UndoHistoryForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>UndoHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Test\UnitTestForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>UnitTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\Palette16Form.resx">
+      <DependentUpon>Palette16Form.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Sprites\Sprite.cs" />
+    <Compile Include="Resources\ResourceMgr.cs" />
+    <Compile Include="Sprites\Tile.cs" />
+    <Compile Include="Toolbox\Toolbox.cs" />
+    <Compile Include="Toolbox\Toolbox_Sprite.cs" />
+    <Compile Include="Undo\UndoAction_MapEdit.cs" />
+    <Compile Include="Undo\UndoAction.cs" />
+    <Compile Include="Undo\UndoAction_AddSprite.cs" />
+    <Compile Include="Undo\UndoAction_PaletteEdit.cs" />
+    <Compile Include="Undo\UndoAction_SpriteEdit.cs" />
+    <Compile Include="Undo\UndoMgr.cs" />
+    <Compile Include="Main\XMLUtils.cs" />
+    <Compile Include="Forms\Test\UnitTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Test\UnitTestForm.Designer.cs">
+      <DependentUpon>UnitTestForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="CHANGES" />
+    <None Include="LICENSE" />
+    <None Include="Resources\images\tool_ellipse.png" />
+    <None Include="Resources\images\tool_shift_up_hilite.png" />
+    <None Include="Resources\images\tool_ellipsefilled.png" />
+    <None Include="Resources\images\tool_eraser.png" />
+    <None Include="Resources\images\tool_eyedropper.png" />
+    <None Include="Resources\images\tool_floodfill.png" />
+    <None Include="Resources\images\tool_hilite.png" />
+    <None Include="Resources\images\tool_line.png" />
+    <None Include="Resources\images\tool_pencil.png" />
+    <None Include="Resources\images\tool_rect.png" />
+    <None Include="Resources\images\tool_rectfilled.png" />
+    <None Include="Resources\images\tool_select.png" />
+    <None Include="Resources\images\tool_shift.png" />
+    <None Include="Resources\images\tool_shift_down.png" />
+    <None Include="Resources\images\tool_shift_down_hilite.png" />
+    <None Include="Resources\images\tool_shift_left.png" />
+    <None Include="Resources\images\tool_shift_left_hilite.png" />
+    <None Include="Resources\images\tool_shift_right.png" />
+    <None Include="Resources\images\tool_shift_right_hilite.png" />
+    <None Include="Resources\images\tool_shift_up.png" />
+    <None Include="Resources\images\tool_disabled.png" />
+    <None Include="TODO" />
+    <None Include="Resources\images\tool_nds.png" />
+    <None Include="Resources\images\tool_gba.png" />
+    <None Include="Resources\images\tool_hilite2.png" />
+    <None Include="Resources\images\tool_largegrid.png" />
+    <None Include="Resources\images\tool_number.png" />
+    <Content Include="Resources\images\tool_rubberstamp.png" />
+    <None Include="Resources\images\tool_screen.png" />
+    <None Include="Resources\images\tool_smallgrid.png" />
+    <Content Include="Resources\Spritely.ico" />
+    <Content Include="Resources\Spritely2.ico" />
+    <Content Include="templates\animation_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\animation_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\background_images_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\background_images_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\background_maps_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\background_maps_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\collision_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\collision_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\game_pnproj.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\game_state_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\game_state_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\game_utils_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\game_utils_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\gba_memmap_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\gba_vram_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\main_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\Makefile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\nds_memmap_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\nds_vram_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\oam_info_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\object_utils_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\object_utils_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\palettes_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\sprites_cpp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\sprites_h.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

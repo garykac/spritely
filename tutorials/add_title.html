@@ -1,0 +1,296 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Adding a Title screen</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Adding a Title screen</h1>
+
+<p>
+This tutorial show you how to add a title screen to your project.
+</p>
+
+<p class="alert">
+This tutorial has been tested with
+<a href="http://www.devkitpro.org">devkitARM release 26</a>
+and <a href="http://code.google.com/p/spritely">Spritely version 0.19.20 beta</a>
+and verified to work for both GBA and NDS projects.
+</p>
+
+<h2>Step 1 : Create basic level</h2>
+
+<p>
+First, we can create a basic game level. For this tutorial, we're just going to 
+add a single sprite, but you can make your level as complex as you wish by
+following the other tutorials.
+</p>
+
+<p><img src="add_title/sprite_small.png" /></p>
+
+
+<h2>Step 2 : Create your title screen</h2>
+
+<p>
+Create a 240x160 image for your title screen (using any drawing program that you wish).
+</p>
+
+<p><img src="add_title/welcome_paint.png" /></p>
+
+<h2>Step 3 : Import image into Spritely</h2>
+
+Switch to the "Background Images" tab and press the "Import..." button 
+(located near the bottom left). Use the file select dialog to select
+your image.
+
+<p><img src="add_title/import_small.png" /></p>
+
+
+<h2>Step 4 : Rename the image</h2>
+
+<p>
+The default image name is auto-generated from the filename. Click on the "Info" button
+(next to the imported image) and rename the image for the title screen to "Welcome".
+</p>
+
+<p><img src="add_title/bgimage_name.png" /></p>
+
+<h2>Step 5 : Export project</h2>
+
+Export your project and open the project file so that we can edit code..
+
+
+<h2>Step 6 : Define a new "level" for the title screen</h2>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 11 - 12:</p>
+<pre class="code">
+// The levels in our game.
+const int kLevel_1 = 1;
+</pre>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 11 - 13:</p>
+<pre class="code">
+<disabled/>// The levels in our game.
+<mark type="plus"/>const int kLevel_Title = 0;
+<disabled/>const int kLevel_1 = 1;
+</pre>
+
+<h2>Step 7 : Modify SetupStage to support the title screen</h2>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 19 - 26:</p>
+<pre class="code">
+// SetupStage
+// This sets up the stage for each level.
+void GameState::SetupStage(int level) {
+	// Record which level we're in.
+	_level = level;
+
+	SetupStage_Level1();
+}
+</pre>
+
+<p>
+Previously, we just always setup for Level1. Now we need to setup the stage for the appropriate
+level.
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 19 - 43:</p>
+<pre class="code">
+<disabled/>// SetupStage
+<disabled/>// This sets up the stage for each level.
+<disabled/>void GameState::SetupStage(int level) {
+	<disabled/>// Record which level we're in.
+	<disabled/>_level = level;
+	<disabled/>
+<mark type="plus"/>	if (_level == kLevel_Title) {
+<mark type="plus"/>		SetupStage_Title();
+<mark type="plus"/>	}
+<mark type="plus"/>
+<mark type="plus"/>	if (_level == kLevel_1) {
+<mark type="plus"/>		SetupStage_Level1();
+<mark type="plus"/>	}
+<mark type="plus"/>
+<mark type="plus"/>	// TODO: Add support for other game levels here.
+<disabled/>}
+<mark type="plus"/>
+<mark type="plus"/>void GameState::SetupStage_Title() {
+<mark type="plus"/>	// Set bitmap mode to display title.
+<mark type="plus"/>	SetBitmapVideoMode();
+<mark type="plus"/>
+<mark type="plus"/>	// Load the background image.
+<mark type="plus"/>	LoadBgImage(kBgImage_Welcome);
+<mark type="plus"/>}
+</pre>
+
+<p>
+Since we're using background images, we need to include the background image
+definitions from <tt>background_images.h</tt>. Add an <tt>#include</tt>
+statement at the top of the file to include these definitions.
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 7 - 10:</p>
+<pre class="code">
+<mark type="plus"/>#include "background_images.h"
+<disabled/>#include "game_state.h"
+<disabled/>#include "game_utils.h"
+<disabled/>#include "object_utils.h"
+</pre>
+
+<p>
+Notice that we added a new routine at the end: <tt>GameState::SetupStage_Title()</tt>.
+When we add a new routine like this, we need to declare it in the <tt>.h</tt> file
+as well.
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 26 - 30:</p>
+<pre class="code">
+	<disabled/>// SetupStage
+	<disabled/>// Set up the stage (backgrounds, sprites) for the each level.
+	<disabled/>void SetupStage(int level);
+<mark type="plus"/>	void SetupStage_Title();
+	<disabled/>void SetupStage_Level1();
+</pre>
+
+<h2>Step 8 : Make sure the game starts at the title screen level</h2>
+
+<p>
+Now we need to have the game start at the title screen. Find the following
+code:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 15 - 18:</p>
+<pre class="code">
+GameState::GameState() {
+	// Setup the stage for level 1.
+	SetupStage(kLevel_1);
+}
+</pre>
+
+<p>
+This tells the game to start at level 1. Change it to start at the title
+screen.
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 15 - 18:</p>
+<pre class="code">
+<disabled/>GameState::GameState() {
+<mark type="arrow"/>	// Start with the title screen.
+<mark type="arrow"/>	SetupStage(kLevel_Title);
+<disabled/>}
+</pre>
+
+<h2>Step 9 : Build/Run</h2>
+
+<p>
+Now if you build and run, you'll be taken to your title screen instead of to "Level 1".
+Unfortunately, we have no way of progressing to Level 1 from the title screen.
+To fix this, we'll make changes to the <tt>GameState::Update()</tt> routine.
+</p>
+
+
+<p><img src="add_title/ss_welcome.png" /></p>
+
+<h2>Step 10 : Modify Update to support the title screen</h2>
+
+<p>
+In <tt>GameState::Update()</tt>, find:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 83 - 85:</p>
+<pre class="code">
+	// Handle input and updates for level 1.
+	Update_Level1();
+}
+</pre>
+
+<p>
+And replace with:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 83 - 102:</p>
+<pre class="code">
+<mark type="plus"/>	// Handle input for title screen.
+<mark type="plus"/>	if (_level == kLevel_Title) {
+<mark type="plus"/>		Update_Title();
+<mark type="plus"/>	}
+<mark type="plus"/>
+<mark type="plus"/>	// Handle input for level 1.
+<mark type="plus"/>	if (_level == kLevel_1) {
+<mark type="plus"/>		Update_Level1();
+<mark type="plus"/>	}
+<mark type="plus"/>
+<mark type="plus"/>	// TODO: Add support for other game levels here.
+<disabled/>}
+<mark type="plus"/>
+<mark type="plus"/>void GameState::Update_Title() {
+<mark type="plus"/>	if (CheckKeyPress(KEY_START)) {
+<mark type="plus"/>		SetupStage(kLevel_1);
+<mark type="plus"/>	}
+<mark type="plus"/>}
+</pre>
+
+<p>
+The <tt>Update_Title()</tt> code says to check for the START key and
+to go to level 1 if it is pressed.
+</p>
+
+<p>
+As before, we added a new routine to <tt>GameState</tt>, so we need to 
+add a declaration in <tt>game_state.h</tt>:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 32 - 36:</p>
+<pre class="code">
+	<disabled/>// Update
+	<disabled/>// This is called continuously to update the game to the next state.
+	<disabled/>void Update();
+<mark type="plus"/>	void Update_Title();
+	<disabled/>void Update_Level1();
+</pre>
+
+
+<h2>Finished!</h2>
+
+<p>
+We're done.
+</p>
+
+<div id="filelink_bkgd"><div id="filelink">
+<h1>Links to completed project</h1>
+<p>GBA:</p>
+<ul>
+<li><a href="add_title/gba/game_state.h">game_state.h</a></li>
+<li><a href="add_title/gba/game_state.cpp">game_state.cpp</a></li>
+<li><a href="add_title/gba/title.gba">title.gba</a></li>
+</ul>
+<p>NDS:</p>
+<ul>
+<li><a href="add_title/nds/game_state.h">game_state.h</a></li>
+<li><a href="add_title/nds/game_state.cpp">game_state.cpp</a></li>
+<li><a href="add_title/nds/title.nds">title.nds</a></li>
+</ul>
+</div></div>
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2008-9 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

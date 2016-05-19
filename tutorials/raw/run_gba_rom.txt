@@ -1,0 +1,104 @@
+NAME run_gba_rom
+TITLE Running a GBA ROM File in VisualBoy Advance
+PROJECT_NAME none
+CATEGORY Getting Started
+AUTHOR Copyright &copy;2008-9 Gary Kacmarcik
+
+<p>
+After you've created a ROM file from your project, you can now run your ROM in
+VisualBoy Advance.
+</p>
+
+<hr/>
+
+# =================================================================
+STEP Find your GBA ROM
+# =================================================================
+
+<p>
+Use the "Run" command (as described in
+TUTORIAL_LINK build_gba_rom Building a GBA ROM file
+), and enter the path to your project:
+</p>
+
+<pre>   c:\gamedev\projects\mygame</pre>
+
+IMAGE vba_00.png
+
+<p>
+This will open up a window that shows the files in your project directory.
+</p>
+
+<p>
+If you just built your project in the previous tutorial (
+TUTORIAL_LINK create_sprite Creating a simple sprite
+), your project directory
+should look like the one shown here.
+</p>
+
+IMAGE vba_01.png
+
+<p>
+Find the <tt>mygame.gba</tt> file icon and double-click it.
+</p>
+
+# =================================================================
+STEP Associate <tt>.gba</tt> files with VisualBoyAdvance
+# =================================================================
+
+<p>
+The very first time you double-click on the .gba file, Windows will
+complain that it does not know how to open a file of that type.
+</p>
+
+IMAGE vba_02.png
+
+<p>
+Choose "Select the program from a list" and press "OK".
+</p>
+
+<p>
+You'll be shown a long list of applications to choose from.
+</p>
+
+IMAGE vba_03.png
+
+<p>
+Unfortunately, VisualBoyAdvance is not listed there, so you'll need
+to press the "Browse..." button and find it.
+</p>
+
+<p>
+If you followed the 
+TUTORIAL_LINK setup_windows Getting setup on Windows
+tutorial, the VisualBoyAdvance.exe file is located in the:
+</p>
+
+<pre class="prettyprint">   c:\gamedev\VisualBoyAdvance-1.7.2</pre>
+
+<p>
+directory.
+</p>
+
+<p>
+After you select VisualBoyAdvance, press "OK" on the "Open With" dialog.
+</p>
+
+<p>
+VisualBoyAdvance will run and launch the ROM file that you created.
+</p>
+
+IMAGE ss_01.png
+
+<p>
+You can use the arrow keys on your computer to move the sprite around the screen.
+</p>
+
+# =================================================================
+FINISH
+# =================================================================
+
+<p>
+The next time you double-click on a .gba file, you won't have to go through the steps
+of selecting an application &mdash; VisualBoyAdvance will launch directly.
+</p> 

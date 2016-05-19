@@ -1,0 +1,436 @@
+NAME jumping
+TITLE Making a character that can jump
+PROJECT_NAME jump
+CATEGORY Basic Game Tasks
+AUTHOR Copyright &copy;2008-9 Gary Kacmarcik
+
+<p>
+<strong><span class="dropcap">T</span>his tutorial</strong> will show you how you can 
+create a character that can jump. We will create a simple background with a level
+"ground" and allow the player to move left and right along this ground. When the
+up-arrow is pressed, the player will jump up and then be pulled back down to the ground
+by our simulated gravity.
+</p>
+
+VERIFIED
+
+STEP Create a new project
+
+<p>
+Create a new project: <tt>c:\gamedev\projects\jump</tt>.
+</p>
+
+STEP Create a sprite
+
+SPRITELY_ACTION draw_sample_2x2_sprite 0
+
+<p>
+Create a sprite for player. Make sure that the image touches the
+bottom of the sprite so that we can easily align the player on
+the ground that we're going to create.
+</p>
+
+IMAGE sprite.png
+
+STEP Create a background with a level ground
+
+# Sky bg tile
+SPRITELY_ACTION select_bgcolor 15
+SPRITELY_ACTION fill_bgsprite 0,0
+
+# Ground bg tile
+SPRITELY_ACTION add_bgsprite 1x1 Ground
+SPRITELY_ACTION select_bgcolor 3
+SPRITELY_ACTION fill_bgsprite 0,0
+
+# Fill background
+SPRITELY_ACTION fill_background 0,16 31,31
+
+<p>
+Take the default background sprite and fill it with an appropriate sky color.
+</p>
+
+<p>
+Add a new 1x1 background tile and fill it with a ground color.
+Draw this tile onto the bottom part of the background map to form a 
+solid horizontal ground.
+</p>
+
+IMAGE background_small.png
+
+STEP Save/Export/Build project
+
+SPRITELY_ACTION export full
+
+<p>
+Save, export, build and run the ROM. The player sprite will appear
+floating up in the upper left corner.
+We need to change its initial position so that it starts out on the
+ground level.
+</p>
+
+VERIFY_BUILD
+
+IMAGE ss_01.png
+
+STEP Move the player so that it starts at ground level
+
+<p>
+To do this, we need to figure out:
+</p>
+
+<ul>
+<li>Where is the "ground level" on the screen</li>
+<li>How tall is the player sprite</li>
+</ul>
+
+<p>
+In <tt>game_state.h</tt>, find the following code:
+</p>
+
+FIND game_state.h
+.	// The (x,y) location of the object representing the player.
+.	int _xPlayer, _yPlayer;
+.};
+END_FIND
+
+<p>
+This code stores the player's location. Add the following lines to make
+space to store the player height and ground level:
+</p>
+
+FIND game_state.h
+.	// The (x,y) location of the object representing the player.
+.	int _xPlayer, _yPlayer;
++
++	// Height of the player sprite.
++	int _yPlayerHeight;
++
++	// The y-coord of ground level.
++	int _yGroundLevel;
+.};
+END_UPDATE
+
+<p>
+To initialize these values, go to the initialize code in <tt>game_state.cpp</tt>:
+</p>
+
+FIND game_state.cpp
+.	// Initialize the objects for the first level.
+.	InitObject(kObj_Player, 0);
+.
+.	// Set the initial location of each object.
+.	_xPlayer = 0;
+.	_yPlayer = 0;
+.	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+END_FIND
+
+<p>
+and make the following changes:
+</p>
+
+UPDATE game_state.cpp
+.	// Initialize the objects for the first level.
+.	InitObject(kObj_Player, 0);
+.
++	// Calculate the ground level.
++	_yPlayerHeight = GetObjectHeight(kObj_Player);
++	_yGroundLevel = 128;
++	
+.	// Set the initial location of each object.
+.	_xPlayer = 0;
+<	_yPlayer = 0;
+>	_yPlayer = _yGroundLevel - _yPlayerHeight;
+.	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+END_UPDATE
+
+<p>
+Now you can build and run to see impact of your changes.
+</p>
+
+<p>
+If you drew your ground at a different level, you may have to change
+<tt>128</tt> as appropriate.
+</p>
+
+VERIFY_BUILD
+
+IMAGE ss_02.png
+
+STEP Disable the up/down arrow buttons
+
+<p>
+By default, the game the Spritely creates allows you to move the player in all
+4 directions: up, down, right and left. Since we want to restrict the player to 
+moving left and right only, we need to disable the support for moving up and down.
+</p>
+
+<p>
+In <tt>game_state.cpp</tt>, find:
+</p>
+
+UPDATE game_state.cpp
+.	// The arrow keys are used to move the current object.
+.	// We use CheckKeyHeld() because we want the action to repeat as long
+.	// as the player is holding down the button.
+.	int dx = 0;
+.	int dy = 0;
+.	if (CheckKeyHeld(KEY_LEFT))
+.		dx = -1;
+.	if (CheckKeyHeld(KEY_RIGHT))
+.		dx = 1;
+x	if (CheckKeyHeld(KEY_UP))
+x		dy = -1;
+x	if (CheckKeyHeld(KEY_DOWN))
+x		dy = 1;
+END_UPDATE
+
+<p>
+and remove the 4 lines that handle KEY_UP and KEY_DOWN.
+</p>
+
+<p>
+If you build and run now, the player will only be able to move left and right.
+</p>
+
+VERIFY_BUILD
+
+STEP Initial attempt at a jump
+
+<p>
+We want the player to jump when we press the up arrow, so let's add support for that.
+</p>
+
+<p>
+In <tt>game_state.cpp</tt>, find the code that handles the left and
+right arrows and add the following code:
+</p>
+
+UPDATE game_state.cpp
+.	// Handle the player pressing the 'A' button.
+.	// We use CheckKeyPress() because we *don't* want the action to repeat
+.	// unless the player presses the 'A' button multiple times.
+.	if (CheckKeyPress(KEY_A)) {
+.		// ToDo: Add code to respond to 'A' button press here.
+.	}
++
++	// Handle the player jump.
++	if (CheckKeyPress(KEY_UP)) {
++		dy = 10;
++	}
+END_UPDATE
+
+VERIFY_BUILD
+
+<p>
+If you run your game now, it's doesn't quite work the way we want - the player jumps up
+10 pixels and then hovers above the ground. Jumping again has the player going up
+even higher. If you keep going, the player can jump
+off the top of the screen.
+</p>
+
+<p>
+The problem is the we're simply adjusting the y-position of the player and 
+not keeping track of the player's velocity. We'll fix that in the next step.
+</p>
+
+STEP Keeping track of velocity
+
+<p>
+If we want to keep track of the player's velocity, we'll need a place to store
+the current velocity value.
+</p>
+
+<p>
+We define this storage space in <tt>game_state.h</tt>.
+Add 2 new values to the <tt>GameState</tt> class:
+</p>
+
+UPDATE game_state.h
+.	// The (x,y) location of the object representing the player.
+.	int _xPlayer, _yPlayer;
+.
+.	// Height of the player sprite.
+.	int _yPlayerHeight;
+.
+.	// The y-coord of ground level.
+.	int _yGroundLevel;
++	
++	// Is the player currently jumping?
++	bool _isjumping;
++	
++	// Current jump velocity.
++	int _yVelocity;
+.};
+END_UPDATE
+
+<p>
+These values keep track of the velocity (only in the y-direction since we're only concerned
+about vertical jumps) and also whether or not the player is currently jumping.
+</p>
+
+<p>
+Whenever we add new variables, we need to initialize them. Go to <tt>game_state.cpp</tt>
+and add the following lines.
+</p>
+
+UPDATE game_state.cpp
+.	// Initialize the objects for the first level.
+.	InitObject(kObj_Player, 0);
+.
+.	// Calculate the ground level.
+.	_yPlayerHeight = GetObjectHeight(kObj_Player);
+.	_yGroundLevel = 128;
+.
+.	// Set the initial location of each object.
+.	_xPlayer = 0;
+.	_yPlayer = _yGroundLevel - _yPlayerHeight;
+.	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
++	
++	_isjumping = false;
++	_yVelocity = 0;
+.
+.	// TODO: Add more initialization for level 1 here.
+.}
+END_UPDATE
+
+<p>
+Now we just need to adjust our jumping code. Find:
+</p>
+
+FIND game_state.cpp
+.	// Handle the player jump.
+.	if (CheckKeyPress(KEY_UP)) {
+.		dy = 10;
+.	}
+END_FIND
+
+<p>
+and change it to:
+</p>
+
+UPDATE game_state.cpp
+.	// Handle the player jump.
+.	if (CheckKeyPress(KEY_UP)) {
+<		dy = 10;
+>		_yVelocity = 10;
++		_isjumping = true;
+.	}
++	dy = -_yVelocity;
+END_UPDATE
+
+<p>
+This code sets the player's upward velocity to 10 and sets the <tt>_isjumping</tt>
+boolean to record that the player is in the middle of a jump.
+</p>
+
+VERIFY_BUILD
+
+<p>
+Now if you build and run, the player should jump up.  But it keeps going up and flies off
+the top of the screen. The problem is that we've given the player a velocity (up)
+but we have nothing that pulls the player back
+down to the ground. On Earth, that problem is solved by using gravity, so let's add
+some gravity to our game world.
+</p>
+
+STEP Adding gravity
+
+<p>
+Near the end of <tt>game_state.cpp</tt> add the following block of code
+after the code to move the player:
+</p>
+
+UPDATE game_state.cpp
+.	// If we need to move the player.
+.	if (dx != 0 || dy != 0) {
+.		// Record the player's new location.
+.		_xPlayer += dx;
+.		_yPlayer += dy;
+.
+.		// Move the player to the new location.
+.		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.	}
+.
++	// If the player is above ground, apply gravity.
++	if (_yPlayer + _yPlayerHeight < _yGroundLevel) {
++		// Apply gravity by reducing upward velocity.
++		_yVelocity--;
++	} else {
++		// Player is on the ground, so stop jumping.
++		_yVelocity = 0;
++		_isjumping = false;
++		// Force player to be exactly at ground level.
++		_yPlayer = _yGroundLevel - _yPlayerHeight;
++		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
++	}
++
+.	// TODO: Add additional game state updates for level 1 here.
+.}
+END_UPDATE
+
+<p>
+This code checks to see if the player is above the ground level and, if so, it applies
+gravity using <tt>_yVelocity--;</tt>. This code reduces the upward velocity by 1
+until the player comes back to the ground.
+</p>
+
+<p>
+Once the player reaches the ground we set the velocity to 0 and record that the player
+is no longer jumping (so that they can jump again). We also force the player
+to be at ground level because mid-air jumps can make the player mis-aligned
+and have them try to go below ground level.
+</p>
+
+VERIFY_BUILD
+
+IMAGE ss_03.png
+
+<p>
+This "time-lapse" screenshot shows the path that the player takes when moving to 
+the right while jumping.
+</p>
+
+STEP Disable mid-air jumps
+
+<p>
+We can disable mid-air jumps by changing:
+</p>
+
+FIND game_state.cpp
+.	// Handle the player jump.
+.	if (CheckKeyPress(KEY_UP)) {
+END_FIND
+
+<p>
+to:
+</p>
+
+UPDATE game_state.cpp
+.	// Handle the player jump.
+<	if (CheckKeyPress(KEY_UP)) {
+>	if (CheckKeyPress(KEY_UP) && !_isjumping) {
+END_UPDATE
+
+VERIFY_BUILD
+
+FINISH
+
+<p>
+Now that we've added gravity, we're done. But we can make additional modifications
+if we want.
+</p>
+
+<p>
+We can can adjust the height of the jump by changing the initial velocity.
+</p>
+
+FIND game_state.cpp
+.	// Handle the player jump.
+.	if (CheckKeyPress(KEY_UP) && !_isjumping) {
+*		_yVelocity = 10;
+.		_isjumping = true;
+.	}
+END_FIND
+
+FILE_LINKS

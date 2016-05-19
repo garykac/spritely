@@ -1,0 +1,316 @@
+NAME second_object
+TITLE Adding a second object
+PROJECT_NAME obj2
+CATEGORY Basic Game Tasks
+AUTHOR Copyright &copy;2008-9 Gary Kacmarcik
+
+<p>
+The default project produced by Spritely doesn't do much, but it is a good
+starting point for creating your own games.
+
+In order to make it interesting, you'll probably want to draw more sprites
+and (more importantly) modify the source code to make the game do what
+you want.
+</p>
+
+<p>
+This tutorial will show you how to add a second object to your project
+and show it on the screen.
+</p>
+
+VERIFIED
+
+# =================================================================
+STEP Create player sprite
+# =================================================================
+
+<p>
+To begin, let's create a simple sprite for the player
+</p>
+
+SPRITELY_ACTION draw_sample_2x2_sprite 0
+SPRITELY_ACTION rename_sprite Player
+
+IMAGE player.png
+
+# =================================================================
+STEP Export
+# =================================================================
+
+SPRITELY_ACTION export full
+
+<p>
+Export your project (into <tt>c:\gamedev\projects\mygame</tt>) and then
+open up the newly-created <tt>.pnproj</tt> file to launch
+Programmer's Notepad.
+</p>
+
+# =================================================================
+STEP Find object definitions
+# =================================================================
+
+<p>
+Find the following code in <tt>game_state.h</tt>:
+</p>
+
+FIND game_state.h
+.// The objects in our game.
+.// Only 128 objects (0-127) can be defined at any time.
+*const int kObj_Player = 0;
+END_FIND
+
+<p>
+The Gameboy (and DS) allows 128 objects on the screen at a time.
+This code is assigning the player object to object #0.
+</p>
+
+<p>
+We could simply use <tt>0</tt> in the code instead of <tt>kObj_Player</tt>,
+but as we add more objects we're likely to forget which
+numbers correspond to which objects. By using a description name like
+<tt>kObj_Player</tt>, we're less likely to get confused.
+</p>
+
+# =================================================================
+STEP Add definiton for second object
+# =================================================================
+
+<p>
+Let's add a definition for a second object. For lack of a clever name,
+we'll just call this one "New" (<tt>kObj_New</tt>).
+</p>
+
+UPDATE game_state.h
+.// The objects in our game.
+.// Only 128 objects (0-127) can be defined at any time.
+.const int kObj_Player = 0;
++const int kObj_New = 1;
+END_UPDATE
+
+<p>
+As with the player object, we'll be using this descriptive name instead
+of <tt>1</tt> in the code.
+</p>
+
+<p>
+Since the GBA allows 128 objects (numbered 0 through 127), we could have
+chosen any number from 0-127 (well, except for 0 since that's taken by the 
+player object).
+</p>
+
+# =================================================================
+STEP Initialize the new object
+# =================================================================
+
+<p>
+Now open up <tt>game_state.cpp</tt>.
+Scroll down until you find the following lines: 
+</p>
+
+FIND game_state.cpp
+.	// Initialize the objects for the first level.
+*	InitObject(kObj_Player, 0);
+.
+.	// Set the initial location of each object.
+.	_xPlayer = 0;
+.	_yPlayer = 0;
+*	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+END_FIND
+
+</p>
+This is the code that places the player object on the screen.
+
+If we add a second line like this one, we can create a second object.
+However, we need to make sure that we don't create our new object on top of our
+existing object (the player).
+</p>
+
+<p>
+Modify the code as follows:
+</p>
+
+UPDATE game_state.cpp
+.	// Initialize the objects for the first level.
+.	InitObject(kObj_Player, 0);
++	InitObject(kObj_New, 0);
+.
+.	// Set the initial location of each object.
+.	_xPlayer = 0;
+.	_yPlayer = 0;
+.	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
++	MoveObjectTo(kObj_New, 50, 50);
+END_UPDATE
+
+<p>
+Note that we're giving different information to the second InitObject() call.
+We're telling it that we're initializing the <tt>kObj_New</tt>
+object with sprite #0 and we're placing it at screen location (50,50).
+</p>
+
+# =================================================================
+STEP Build/Run
+# =================================================================
+
+<p>
+Compile and run your code and you should see a second object near the
+middle of the screen.
+</p>
+
+VERIFY_BUILD
+
+IMAGE ss_01.png
+
+<p>
+You can't move the object, and if you move your player around you'll
+go right over it.
+It also looks exactly the same as the player object.
+We'll fix the collision problem in a later tutorial, but we can change
+the new object to use a different sprite right now.
+</p>
+
+# =================================================================
+STEP Draw another sprite
+# =================================================================
+
+<p>
+To do this, we need to return to Spritely and draw a new sprite.
+You can create a new sprite by selecting "New" under the "Sprite"
+menu and selecting the desired size.
+</p>
+
+IMAGE menu_new_sprite.png
+
+SPRITELY_ACTION add_sprite 4x1 New
+SPRITELY_ACTION draw_sample_4x1_sprite 0
+
+<p>
+For this example, we created a new "4x1 (32x8 pixels) Wide" sprite and drew
+a simple bat. For your sprite, you can use whatever size you want.
+</p>
+
+IMAGE new.png
+
+<p>
+After you've created your new sprite. You now need to give each of
+your sprites a unique name.
+</p>
+
+<p>
+The name of each sprite is shown immediately under the sprite list.
+By default, sprites are given names like "S1" or "S3". You can rename
+them by pressing the "Info" button or by selecting the Sprite::Properties...
+menu item.
+</p>
+
+<p>
+Name your player sprite "Player" and name your new object sprite "New".
+Again, feel free to give your sprites different names, bearing in mind
+that you'll need to use your new sprite names throughout this tutorial.
+</p>
+
+IMAGE name_player.png
+
+IMAGE name_new.png
+
+# =================================================================
+STEP Export updated sprites
+# =================================================================
+
+<p>
+Now, export your sprites and backgrounds into your project directory.
+</p>
+
+SPRITELY_ACTION export sprites
+
+<p>
+Do not export a "complete project" or else you will overwrite the code
+changes that you made earlier.
+</p>
+
+# =================================================================
+STEP Verify sprite names
+# =================================================================
+
+<p>
+If you now open up <tt>sprites.h</tt>, you can see how the names
+that you gave to your sprites are being used in the code.
+</p>
+
+<p>
+Scroll down to the bottom of <tt>sprites.h</tt>. You should see the
+following code:
+</p>
+
+FIND sprites.h
+.// Sprite IDs
+.const int kSprites_Player = 0;
+.const int kSprites_New = 1;
+END_FIND
+
+# =================================================================
+STEP Initialize object with different sprites
+# =================================================================
+
+<p>
+Now that we've given the sprites names, we can easily update the
+<tt>InitObject()</tt> calls to choose different sprites.
+</p>
+
+<p>
+Go back to <tt>game_state.cpp</tt> and look at initialization code:
+</p>
+
+FIND game_state.cpp
+.	// Initialize the objects for the first level.
+.	InitObject(kObj_Player, 0);
+.	InitObject(kObj_New, 0);
+END_FIND
+
+<p>
+The second parameter of the InitObject() call is the sprite id that
+is used to create the object. Currently, this is set to 0 for both
+objects, which means that both objects are using the same sprite
+(sprite #0, which happens to be the player sprite in our example).
+</p>
+
+<p>
+We're going to change this parameter to use a different sprite for
+each object.
+</p>
+
+<p>
+Change this code to the following:
+</p>
+
+UPDATE game_state.cpp
+.	// Initialize the objects for the first level.
+<	InitObject(kObj_Player, 0);
+>	InitObject(kObj_Player, kSprites_Player);
+<	InitObject(kObj_New, 0);
+>	InitObject(kObj_New, kSprites_New);
+END_UPDATE
+
+<p>
+Note that the <tt>0</tt> in each line has been changed to use
+one of the sprite names that we specified earlier: 
+<tt>kSprites_Player</tt> and <tt>kSprite_New</tt>.
+</p>
+
+<p>
+Compile and run your program and you should see that your new object
+is now based on the new sprite.
+</p>
+
+IMAGE ss_02.png
+
+VERIFY_BUILD
+
+# =================================================================
+FINISH
+# =================================================================
+
+<p>
+You're done.
+</p>
+
+FILE_LINKS

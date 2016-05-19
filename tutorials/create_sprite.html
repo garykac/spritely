@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Creating a simple sprite</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Creating a simple sprite</h1>
+
+<p>
+This tutorial will introduce you to Spritely and show how to create
+your own sprites.
+</p>
+
+<hr/>
+
+<h2>Step 1 : Create a folder for your project</h2>
+
+<p>
+Before starting, you'll need to create a folder in which we can
+save the files that we'll be creating.
+If you have a <tt>c:\gamedev\projects</tt> directory, this is a 
+good location to create your game folder.
+</p>
+
+<p>
+Think of a good name for your project and
+create a new sub-directory here.
+</p>
+
+<p>
+Feel free to choose whatever name you like for your project, but make sure that you don't
+put any spaces or punctuation marks. For example, "mygame" is an acceptable name, but "my game!"
+is not because it contains a space and exclamation mark.
+</p>
+
+<p>
+In this tutorial we will use the uninspired name of <tt>mygame</tt>.
+</p>
+
+<p><img src="create_sprite/save_01.png" /></p>
+
+<h2>Step 2 : Launch Spritely</h2>
+
+<p>
+Go to your Spritely directory. This should be <tt>c:\gamedev\Spritely</tt>
+unless you decided to install it somewhere else.
+</p>
+
+<p><img src="create_sprite/spritely_01.png" /></p>
+
+<p>
+Launch Spritely by double-clicking the <tt>Sprite.exe</tt> icon.
+</p>
+
+<p>
+This will bring up the main Spritely window. There are 3 sub-windows:
+a list of sprites on the left, a color palette on the bottom, and the
+sprite editing area (with drawing tools) occupying the rest of the
+space.
+</p>
+
+<p><img src="create_sprite/spritely_02_small.png" /></p>
+
+<h2>Step 3 : Create a sprite</h2>
+
+<p>
+Use the pencil tool (selected by default) to draw an outline for a
+simple sprite.  Choose another color and then use the paint bucket
+tool to fill the sprite. Note that the default background color is
+white so choose colors that will show up well against a white background.
+</p>
+
+<p><img src="create_sprite/spritely_03_small.png" /></p>
+
+<p>
+Don't worry about making it perfect &mdash; you can come back and make adjustments later.
+</p>
+
+<h2>Step 4 : Save progress</h2>
+
+<p>
+Before moving on, now is a good time to save your progress so far.
+</p>
+
+<p>
+To save your data in Spritely, select "Save" from the "File" menu and choose the directory
+that you just created: <tt>c:\gamedev\projects\mygame</tt>.
+</p>
+
+<p><img src="create_sprite/spritely_04.png" /></p>
+
+<p>
+If you chose <tt>mygame</tt> as the name of your file, your data will be saved in file called
+<tt>mygame.xml</tt>.
+</p>
+
+<p><img src="create_sprite/save_02.png" /></p>
+
+<p>
+Make sure you save your progress often as you work.
+</p>
+
+<h2>Step 5 : Export</h2>
+
+<p>
+Now that you've saved your work, you can use Spritely to export your sprites
+along with source code to create a Gameboy Advance project.
+</p>
+
+<p>Select "Export..." from the "File" menu.</p>
+
+<p><img src="create_sprite/spritely_05.png" /></p>
+
+<p>That will bring up the "Export" dialog.</p>
+
+<p><img src="create_sprite/export1.png" /></p>
+
+<p>
+Change "Export as..." to "Complete project".
+</p>
+
+<p>
+For the "Export to...", press the "..." button on the far right...
+</p>
+
+<p><img src="create_sprite/spritely_07.png" /></p>
+
+<p>
+...and select the <tt>c:\gamedev\projects\mygame</tt> directory that you created earlier
+for your project.
+</p>
+
+<p>
+When you're done, press the "OK" button.
+</p>
+
+<p>
+Now that you've selected a project directory, the "Export" dialog should
+look like this.
+</p>
+
+<p><img src="create_sprite/export2.png" /></p>
+
+<p>
+Press the "Export" button.
+</p>
+
+<p><img src="create_sprite/spritely_09.png" /></p>
+
+<p>
+Success! You have exported you sprites as a GBA project.
+</p>
+
+<p>
+If you look at your <tt>c:\gamedev\projects\mygame</tt> directory, you will see the
+newly-created files.
+</p>
+
+<blockquote><tt>Makefile</tt> &mdash; This file contains the instructions for building the GBA ROM file.</blockquote>
+<blockquote><tt>mygame.pnproj</tt> &mdash; The Programmer's Notepad project file.</blockquote>
+<blockquote><tt>source/</tt> &mdash; This directory contains all of the source files for the game.</blockquote>
+
+<p><img src="create_sprite/mygame.png" /></p>
+
+<p>
+We will be making use of these files in the next tutorial where we will build a ROM file that we can
+run in an emulator (or on real GBA hardware).
+</p> 
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2008-9 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

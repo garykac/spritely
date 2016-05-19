@@ -1,0 +1,124 @@
+body {
+	margin: 1.5em;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	text-decoration: none;
+	line-height: 130%;
+}
+
+#content .dropcap {
+	float: left;
+	font-size: 2.7em;
+	font-weight: bold;
+	padding: 0.25em 0 0.1em 0;
+	margin-right: 0.1em;
+}
+
+#content tt {
+	font-weight: bold;
+	font-size: 1.2em;
+	margin-left: 0.3em;
+	margin-right: 0.3em;
+}
+
+h1 {
+	text-align: center;
+}
+
+#filelink_bkgd {
+	padding: 0em .25em 0em .25em;
+	margin: .5em 0em .5em 0em;
+	background-color: #e0e0ff;
+	border: 2px solid #808080;
+	color: #404040;
+	font-size: 0.8em;
+}
+
+#filelink_bkgd div h1 {
+	font-size: 1.0em;
+	text-align: left;
+}
+
+#filelink {
+	padding: 0em .5em 0em .5em;
+}
+
+#footer_bkgd {
+	padding: 0em .25em 0em .25em;
+	margin: .5em 0em .5em 0em;
+	background-color: #d0d0ff;
+	border: 2px solid #808080;
+	color: #404040;
+	font-size: 0.8em;
+	line-height: 150%;
+}
+
+#footer {
+	padding: 0em .5em 0em .5em;
+}
+
+.alert {
+	margin-left: 5em;
+	margin-right: 5em;
+	padding: 0.5em;
+	text-align: center;
+	font-size: 9pt;
+	background-color: #fff0f0;
+	border: double #ff0000;
+}
+
+/* Filename displayed at top of <pre code> sections */
+.filename {
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 0;
+	padding-left: 10px;
+	padding-right: 10px;
+	line-height: 1.5em;
+	font-size: 9pt;
+	background-color: #d0d0ff;
+	border: 1px solid #808080;
+}
+
+p+pre {
+	margin-top: -1px;
+}
+
+/* <pre.code> formatting */
+pre.code {
+	margin-left: 10px;
+	margin-right: 10px;
+	line-height: 130%;
+	/* 1.1em looks good on Firefox & Safari, too big on IE7
+	 * 0.9em looks good on IE7, too small on FF and Safari
+	 * 11pt looks good on all browsers.
+	 */
+	font-size: 11pt;
+	padding: 10px;
+	border: 1px solid #808080;
+}
+
+.string { color: #a00000; }
+.comment { color: #009900; }
+.keyword { color: #600090; }
+.variable { color: #000090; }
+.function { color: #008080; }
+.disabled { color: #707070; }
+
+.startline {
+	padding: 0;
+	padding-left: 25px;
+}
+
+/* <pre code> mark types */
+.arrow {
+	background:url(arrow.png) 0 50% no-repeat;
+}
+.cross {
+	background:url(cross.png) 0 50% no-repeat;
+}
+.plus {
+	background:url(plus.png) 0 50% no-repeat;
+}

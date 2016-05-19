@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Running a GBA ROM File in VisualBoy Advance</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Running a GBA ROM File in VisualBoy Advance</h1>
+
+<p>
+After you've created a ROM file from your project, you can now run your ROM in
+VisualBoy Advance.
+</p>
+
+<hr/>
+
+<h2>Step 1 : Find your GBA ROM</h2>
+
+<p>
+Use the "Run" command (as described in
+<a href="build_gba_rom.html">Building a GBA ROM file</a>
+), and enter the path to your project:
+</p>
+
+<pre>   c:\gamedev\projects\mygame</pre>
+
+<p><img src="run_gba_rom/vba_00.png" /></p>
+
+<p>
+This will open up a window that shows the files in your project directory.
+</p>
+
+<p>
+If you just built your project in the previous tutorial (
+<a href="create_sprite.html">Creating a simple sprite</a>
+), your project directory
+should look like the one shown here.
+</p>
+
+<p><img src="run_gba_rom/vba_01.png" /></p>
+
+<p>
+Find the <tt>mygame.gba</tt> file icon and double-click it.
+</p>
+
+<h2>Step 2 : Associate <tt>.gba</tt> files with VisualBoyAdvance</h2>
+
+<p>
+The very first time you double-click on the .gba file, Windows will
+complain that it does not know how to open a file of that type.
+</p>
+
+<p><img src="run_gba_rom/vba_02.png" /></p>
+
+<p>
+Choose "Select the program from a list" and press "OK".
+</p>
+
+<p>
+You'll be shown a long list of applications to choose from.
+</p>
+
+<p><img src="run_gba_rom/vba_03.png" /></p>
+
+<p>
+Unfortunately, VisualBoyAdvance is not listed there, so you'll need
+to press the "Browse..." button and find it.
+</p>
+
+<p>
+If you followed the 
+<a href="setup_windows.html">Getting setup on Windows</a>
+tutorial, the VisualBoyAdvance.exe file is located in the:
+</p>
+
+<pre class="prettyprint">   c:\gamedev\VisualBoyAdvance-1.7.2</pre>
+
+<p>
+directory.
+</p>
+
+<p>
+After you select VisualBoyAdvance, press "OK" on the "Open With" dialog.
+</p>
+
+<p>
+VisualBoyAdvance will run and launch the ROM file that you created.
+</p>
+
+<p><img src="run_gba_rom/ss_01.png" /></p>
+
+<p>
+You can use the arrow keys on your computer to move the sprite around the screen.
+</p>
+
+<h2>Finished!</h2>
+
+<p>
+The next time you double-click on a .gba file, you won't have to go through the steps
+of selecting an application &mdash; VisualBoyAdvance will launch directly.
+</p> 
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2008-9 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

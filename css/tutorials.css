@@ -1,0 +1,12 @@
+.steps {border: 1px solid #808080; border-collapse: collapse;}
+code {font-weight: bold}
+.tigroup {font-weight: bold; font-size: large;}
+.navbar {background-color: #e0e0e0}
+
+/* source code commenting */
+table.source {border: 2px solid #808080; width:90%; margin-left:5%; margin-right:5%; padding: 5px;}
+.comment {color: #008000;}
+.type {color: #0000d0;}
+.var {color: #9000e0;}
+.constant {color: #008080;}
+.hidden {color: #a0a0a0;}

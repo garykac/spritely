@@ -1,0 +1,172 @@
+// nds_vram.h
+
+// =========================
+// Overview of NDS Video RAM
+// =========================
+
+// The NDS video RAM (VRAM) is a set of memory that is used to store the
+// images being displayed on the 2, 256x192 pixel screens (Note that the
+// original GBA LCD screen is 240x160 pixels).
+//
+// Unlike the GBA where the display mode directly controlled how the VRAM
+// was used, the NDS has 9 VRAM banks of various sizes that you need to
+// map before you can use them.
+//
+// There are 8 display modes, numbered 0-7.
+//   Modes 0-5 are tiled and/or 3D modes.
+//   Mode 6 is a 3D mode.
+//   Mode 7 is a bitmap (framebuffer) mode.
+//
+// Each mode allows different types of background layers.
+// There are 4 types of background layers:
+//   'text' backgrounds are simple tiled backgrounds that don't
+//      support rotation or scaling. 4-bit or 8-bit palette
+//      entries may be used.
+//   'rotation' backgrounds are tiled backgrounds that can be
+//      rotated or scaled. Only 8-bit palette entries may be used.
+//   'extended'
+//   'large'
+//
+// The NDS also has 2 graphics engines: Main (or A) and Sub (or B).
+//
+// Mode 0:
+//   Four text background layers:0,1,2,3 (No rotation/scaling).
+//   For Engine A, background 0 may be a 3D background. Background 0
+//   must be text for Engine B.
+//
+// Mode 1:
+//   Three text background layers: 0,1,2. One rotation background: 3.
+//   For Engine A, background 0 may be a 3D background.
+//
+// Mode 2:
+//   Two text background layers: 0,1. Two rotation backgrounds: 2,3.
+//   For Engine A, background 0 may be a 3D background.
+//
+// Mode 3:
+//   Three text background layers: 0,1,2. One extended background: 3.
+//   For Engine A, background 0 may be a 3D background.
+//
+// Mode 4:
+//   Two text background layers: 0,1. One rotation background: 2,
+//   One extended background: 3.
+//   For Engine A, background 0 may be a 3D background.
+//
+// Mode 5:
+//   Two text background layers: 0,1. Two extended backgrounds: 2,3.
+//   For Engine A, background 0 may be a 3D background.
+//
+// Mode 6:
+//   One 3D background layer: 0. One large background: 2.
+//   Backgrounds 1,3 are not used.
+//   Not available for Engine B.
+//
+// Mode 7:
+//   Bitmapped mode.
+//   Not available for Engine B.
+//
+
+
+// ==========                                                                                 
+// Background     A        B        C        D        E        F        G        H        I   
+//  Engine A    128K     128K     128K     128K      64K      16K      16K      32K      16K  
+// ==========                                                                                 
+//                                                                                            
+// 0x06000000  +-----+  +-----+  +-----+  +-----+  +-----+  +-----+  +-----+  :     :  :     :
+//             | bg0 |  | bg0 |  | bg0 |  | bg0 |  | bg  |  | bg0 |  | bg0 |  :     :  :     :
+// 0x06004000  | tx0 |  | tx0 |  | tx0 |  | tx0 |  |     |  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  | 7-0 |  | 7-0 |  |     |  | bg1 |  | bg1 |  :     :  :     :
+// 0x06008000  |     |  |     |  |     |  |     |  |     |  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  |     |  |     |  |     |  :     :  :     :  :     :  :     :
+// 0x06010000  |     |  |     |  |     |  |     |  +-----+  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  |     |  |     |  :     :  | bg2 |  | bg2 |  :     :  :     :
+// 0x06014000  |     |  |     |  |     |  |     |  :     :  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  |     |  |     |  :     :  | bg3 |  | bg3 |  :     :  :     :
+// 0x06018000  |     |  |     |  |     |  |     |  :     :  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  |     |  |     |  :     :  :     :  :     :  :     :  :     :
+// 0x06020000  +-----+  +-----+  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :
+//             | bg1 |  | bg1 |  | bg1 |  | bg1 |  :     :  :     :  :     :  :     :  :     :
+//             | tx1 |  | tx1 |  | tx1 |  | tx1 |  :     :  :     :  :     :  :     :  :     :
+//             |     |  |     |  | 7-1 |  | 7-1 |  :     :  :     :  :     :  :     :  :     :
+// 0x06040000  +-----+  +-----+  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :
+//             | bg2 |  | bg2 |  | bg2 |  | bg2 |  :     :  :     :  :     :  :     :  :     :
+//             | tx2 |  | tx2 |  | tx2 |  | tx2 |  :     :  :     :  :     :  :     :  :     :
+// 0x06060000  +-----+  +-----+  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :
+//             | bg3 |  | bg3 |  | bg3 |  | bg3 |  :     :  :     :  :     :  :     :  :     :
+//             | tx3 |  | tx3 |  | tx3 |  | tx3 |  :     :  :     :  :     :  :     :  :     :
+// 0x06080000  +-----+  +-----+  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :
+//                                                                                            
+// ==========                                                                                 
+// Background     A        B        C        D        E        F        G        H        I   
+//  Engine B    128K     128K     128K     128K      64K      16K      16K      32K      16K  
+// ==========                                                                                 
+//                                                                                            
+// 0x06200000  :     :  :     :  +-----+  :     :  :     :  :     :  :     :  +-----+  :     :
+//             :     :  :     :  | bg  |  :     :  :     :  :     :  :     :  | bg  |  :     :
+// 0x06208000  :     :  :     :  |     |  :     :  :     :  :     :  :     :  +-----+  +-----+
+//             :     :  :     :  |     |  :     :  :     :  :     :  :     :  :     :  | bg  |
+// 0x0620c000  :     :  :     :  |     |  :     :  :     :  :     :  :     :  :     :  +-----+
+//             :     :  :     :  |     |  :     :  :     :  :     :  :     :  :     :  :     :
+// 0x06220000  :     :  :     :  +-----+  :     :  :     :  :     :  :     :  :     :  :     :
+//                                                                                            
+// ==========                                                                                 
+//   Sprite       A        B        C        D        E        F        G        H        I   
+//  Engine A    128K     128K     128K     128K      64K      16K      16K      32K      16K  
+// ==========                                                                                 
+//                                                                                            
+// 0x06400000  +-----+  +-----+  :     :  :     :  +-----+  +-----+  +-----+  :     :  :     :
+//             | sp0 |  | sp0 |  :     :  :     :  | spr |  | sp0 |  | sp0 |  :     :  :     :
+// 0x06404000  |     |  |     |  :     :  :     :  |     |  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  :     :  :     :  |     |  | sp1 |  | sp1 |  :     :  :     :
+// 0x06408000  |     |  |     |  :     :  :     :  |     |  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  :     :  :     :  |     |  :     :  :     :  :     :  :     :
+// 0x06410000  |     |  |     |  :     :  :     :  +-----+  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  :     :  :     :  :     :  | sp2 |  | sp2 |  :     :  :     :
+// 0x06414000  |     |  |     |  :     :  :     :  :     :  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  :     :  :     :  :     :  | sp3 |  | sp3 |  :     :  :     :
+// 0x06418000  |     |  |     |  :     :  :     :  :     :  +-----+  +-----+  :     :  :     :
+//             |     |  |     |  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+// 0x06420000  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+//             | sp1 |  | sp1 |  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+// 0x06440000  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+//                                                                                            
+// ==========                                                                                 
+//   Sprite       A        B        C        D        E        F        G        H        I   
+//  Engine B    128K     128K     128K     128K      64K      16K      16K      32K      16K  
+// ==========                                                                                 
+//                                                                                            
+// 0x06600000  :     :  :     :  :     :  +-----+  :     :  :     :  :     :  :     :  :     :
+//             :     :  :     :  :     :  | spr |  :     :  :     :  :     :  :     :  :     :
+// 0x06604000  :     :  :     :  :     :  |     |  :     :  :     :  :     :  :     :  +-----+
+//             :     :  :     :  :     :  |     |  :     :  :     :  :     :  :     :  | spr |
+// 0x06620000  :     :  :     :  :     :  +-----+  :     :  :     :  :     :  :     :  +-----+
+//                                                                                            
+// ==========                                                                                 
+//    LCDC        A        B        C        D        E        F        G        H        I   
+// ==========                                                                                 
+//                                                                                            
+// 0x06800000  +-----+  :     :  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+//             |     |  :     :  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+// 0x06810000  |     |  :     :  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+//             |     |  :     :  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+// 0x06820000  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+//             :     :  |     |  :     :  :     :  :     :  :     :  :     :  :     :  :     :
+// 0x06840000  :     :  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :  :     :
+//             :     :  :     :  |     |  :     :  :     :  :     :  :     :  :     :  :     :
+// 0x06860000  :     :  :     :  +-----+  +-----+  :     :  :     :  :     :  :     :  :     :
+//             :     :  :     :  :     :  |     |  :     :  :     :  :     :  :     :  :     :
+// 0x06880000  :     :  :     :  :     :  +-----+  +-----+  :     :  :     :  :     :  :     :
+//             :     :  :     :  :     :  :     :  | xpal|  :     :  :     :  :     :  :     :
+//             :     :  :     :  :     :  :     :  | tpal|  :     :  :     :  :     :  :     :
+// 0x06890000  :     :  :     :  :     :  :     :  +-----+  +-----+  :     :  :     :  :     :
+//             :     :  :     :  :     :  :     :  :     :  | xpal|  :     :  :     :  :     :
+//             :     :  :     :  :     :  :     :  :     :  | tpal|  :     :  :     :  :     :
+// 0x06894000  :     :  :     :  :     :  :     :  :     :  +-----+  +-----+  :     :  :     :
+//             :     :  :     :  :     :  :     :  :     :  :     :  | xpal|  :     :  :     :
+//             :     :  :     :  :     :  :     :  :     :  :     :  | xpal|  :     :  :     :
+// 0x06898000  :     :  :     :  :     :  :     :  :     :  :     :  +-----+  +-----+  :     :
+//             :     :  :     :  :     :  :     :  :     :  :     :  :     :  | xpal|  :     :
+// 0x068a0000  :     :  :     :  :     :  :     :  :     :  :     :  :     :  +-----+  +-----+
+//             :     :  :     :  :     :  :     :  :     :  :     :  :     :  :     :  | xpal|
+// 0x068a4000  :     :  :     :  :     :  :     :  :     :  :     :  :     :  :     :  +-----+
+
+

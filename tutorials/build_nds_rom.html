@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Creating an NDS ROM File</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Creating an NDS ROM File</h1>
+
+<p>
+If you want to create an NDS ROM file instead of a GBA ROM, then you 
+need to change the platform to NDS so that Spritely will generate NDS
+code instead of GBA code.
+</p>
+
+<hr/>
+
+<h2>Step 1 : Set Platform to NDS</h2>
+
+<p>
+In Spritely, set the platform to NDS by selecting "NDS" in the "Platform"
+submenu of the "Project" menu:.
+</p>
+
+<p><img src="build_nds_rom/platform_nds.png" /></p>
+
+<h2>Step 2 : Edit project</h2>
+
+<p>
+When you're creating a NDS project, almost all of the tools are exactly the
+same as when you're creating a GBA project. However, there are a few
+differences.
+</p>
+
+<p>
+The big difference is that the NDS screen size is larger than that of
+the GBA. The NDS screens are each 32x24 tiles (256x192 pixels) whereas
+the GBA screen is 20x30 tiles (240x160 pixels).
+</p>
+
+<p><img src="build_nds_rom/screen_sizes.png" /></p>
+
+<p>
+Spritely shows 32x32 tiles in the background map editor because that's
+how many tiles the GBA/NDS can store internally for the background map.
+The bottom 8 rows of tiles (12 rows on the GBA) are not visible on the NDS
+screen, but they will be useful once we we learn how to scroll the background
+in a later tutorial.
+</p>
+
+<h2>Step 3 : Export project</h2>
+
+<p>
+Export your project as you normally would. When the platform is set
+to NDS, it will export NDS code instead of GBA code.
+</p>
+
+<p>
+These code differences are minor and all of the tutorials will work for
+either GBA or NDS projects (unless otherwise specified).
+</p>
+
+<h2>Step 4 : Create ROM file</h2>
+
+<p>
+Now you can create the ROM file exactly the same way as you did
+for the GBA ROM file. You can do this via the command line
+(as described in the
+<a href="build_gba_rom.html">Building a GBA ROM File</a>
+tutorial) or using Programmer's Notepad (as described in the
+<a href="using_pn.html">Using Programmer's Notepad</a>
+tutorial).
+</p>
+
+<h2>Finished!</h2>
+
+<p>
+If you open your project directory, you'll see the new files that were created.
+</p>
+
+<blockquote><tt>build/</tt> &mdash; This directory contains temporary files that the compiler used when building the ROM file. </blockquote>
+<blockquote><tt>mygame.elf</tt> &mdash; This is another temporary file.</blockquote>
+<blockquote><tt>mygame.arm9</tt> &mdash; This is yet another temporary file.</blockquote>
+<blockquote><tt>mygame.nds</tt> &mdash; This is the NDS ROM file that contains your game!</blockquote>
+
+<p>
+You're now ready to run your ROM and see how your sprite looks.
+</p> 
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2009 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

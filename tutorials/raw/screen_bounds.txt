@@ -1,0 +1,158 @@
+NAME screen_bounds
+TITLE Keeping the player within the screen boundary
+PROJECT_NAME screenbounds
+CATEGORY Basic Game Tasks
+AUTHOR Copyright &copy;2008-9 Gary Kacmarcik
+
+VERIFIED
+
+# =================================================================
+STEP Create a sprite
+# =================================================================
+
+<p>
+Create a simple sprite.
+</p>
+
+SPRITELY_ACTION draw_sample_2x2_sprite 0
+
+IMAGE sprite.png
+
+# =================================================================
+STEP Export project
+# =================================================================
+
+<p>
+Export your project and open Programmer's Notepad to edit the source
+code.
+</p>
+
+SPRITELY_ACTION export full
+
+# =================================================================
+STEP Keep player within screen bounds
+# =================================================================
+
+<p>
+To keep the player's sprite within the screen bounds, we need to 
+add a check whenever the player tries to move.
+</p>
+
+<p>
+If the player tries to go too far to the left, right, top or bottom,
+we need to detect it and prevent the movement.
+</p>
+
+<p>
+To add these checks, find the following code:
+</p>
+
+FIND game_state.cpp
+.	// If we need to move the player.
+.	if (dx != 0 || dy != 0) {
+.		// Record the player's new location.
+.		_xPlayer += dx;
+.		_yPlayer += dy;
+.
+.		// Move the player to the new location.
+.		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.	}
+END_FIND
+
+<p>
+And modify it as follows:
+</p>
+
+UPDATE game_state.cpp
+.	// If we need to move the player.
+.	if (dx != 0 || dy != 0) {
++		// Calculate the player's new location.
++		int x = _xPlayer + dx;
++		int y = _yPlayer + dy;
++
++		// Don't let the player go outside the screen boundaries.
++		if (x < 0 || x > SCREEN_WIDTH)
++			dx = 0;
++		if (y < 0 || y > SCREEN_HEIGHT)
++			dy = 0;
++
+.		// Record the player's new location.
+.		_xPlayer += dx;
+.		_yPlayer += dy;
+.
+.		// Move the player to the new location.
+.		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.	}
+END_UPDATE
+
+VERIFY_BUILD
+
+# =================================================================
+STEP Build/Run
+# =================================================================
+
+<p>
+If you build/run now, you'll see that the left and top borders are working
+as intended, but the right and bottom borders still allow the player
+to go (a little bit) offscreen.
+</p>
+
+IMAGE ss_off.png
+
+<p>
+This is because the code we wrote only checks the upper-left corner of
+the sprite.  If we want to really keep the sprite on the screen, we need
+to take into account the width and height of the sprite.
+</p>
+
+# =================================================================
+STEP Adjust for size of player sprite
+# =================================================================
+
+<p>
+Make the following changes:
+</p>
+
+UPDATE game_state.cpp
+.	// If we need to move the player.
+.	if (dx != 0 || dy != 0) {
+.		// Calculate the player's new location.
+.		int x = _xPlayer + dx;
+.		int y = _yPlayer + dy;
+.
++		// Get the width/height of the player.
++		int width, height;
++		GetObjectSize(kObj_Player, &width, &height);
++
+.		// Don't let the player go outside the screen boundaries.
+<		if (x < 0 || x > SCREEN_WIDTH)
+>		if (x < 0 || x > SCREEN_WIDTH - width)
+.			dx = 0;
+<		if (y < 0 || y > SCREEN_HEIGHT)
+>		if (y < 0 || y > SCREEN_HEIGHT - height)
+.			dy = 0;
+.
+.		// Record the player's new location.
+.		_xPlayer += dx;
+.		_yPlayer += dy;
+.
+.		// Move the player to the new location.
+.		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.	}
+END_UPDATE
+
+<p>
+And the player's movement will be constrained to within the screen boundaries.
+</p>
+
+VERIFY_BUILD
+
+# =================================================================
+FINISH
+# =================================================================
+
+<p>
+Done.
+</p>
+
+FILE_LINKS

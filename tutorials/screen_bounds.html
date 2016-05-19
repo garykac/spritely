@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Keeping the player within the screen boundary</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Keeping the player within the screen boundary</h1>
+
+<p class="alert">
+This tutorial has been tested with
+<a href="http://www.devkitpro.org">devkitARM release 26</a>
+and <a href="http://code.google.com/p/spritely">Spritely version 0.19.20 beta</a>
+and verified to work for both GBA and NDS projects.
+</p>
+
+<h2>Step 1 : Create a sprite</h2>
+
+<p>
+Create a simple sprite.
+</p>
+
+
+<p><img src="screen_bounds/sprite.png" /></p>
+
+<h2>Step 2 : Export project</h2>
+
+<p>
+Export your project and open Programmer's Notepad to edit the source
+code.
+</p>
+
+
+<h2>Step 3 : Keep player within screen bounds</h2>
+
+<p>
+To keep the player's sprite within the screen bounds, we need to 
+add a check whenever the player tries to move.
+</p>
+
+<p>
+If the player tries to go too far to the left, right, top or bottom,
+we need to detect it and prevent the movement.
+</p>
+
+<p>
+To add these checks, find the following code:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 94 - 102:</p>
+<pre class="code">
+	// If we need to move the player.
+	if (dx != 0 || dy != 0) {
+		// Record the player's new location.
+		_xPlayer += dx;
+		_yPlayer += dy;
+
+		// Move the player to the new location.
+		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	}
+</pre>
+
+<p>
+And modify it as follows:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 94 - 112:</p>
+<pre class="code">
+	<disabled/>// If we need to move the player.
+	<disabled/>if (dx != 0 || dy != 0) {
+<mark type="plus"/>		// Calculate the player's new location.
+<mark type="plus"/>		int x = _xPlayer + dx;
+<mark type="plus"/>		int y = _yPlayer + dy;
+<mark type="plus"/>
+<mark type="plus"/>		// Don't let the player go outside the screen boundaries.
+<mark type="plus"/>		if (x &lt; 0 || x &gt; SCREEN_WIDTH)
+<mark type="plus"/>			dx = 0;
+<mark type="plus"/>		if (y &lt; 0 || y &gt; SCREEN_HEIGHT)
+<mark type="plus"/>			dy = 0;
+<mark type="plus"/>
+		<disabled/>// Record the player's new location.
+		<disabled/>_xPlayer += dx;
+		<disabled/>_yPlayer += dy;
+	<disabled/>
+		<disabled/>// Move the player to the new location.
+		<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>}
+</pre>
+
+
+<h2>Step 4 : Build/Run</h2>
+
+<p>
+If you build/run now, you'll see that the left and top borders are working
+as intended, but the right and bottom borders still allow the player
+to go (a little bit) offscreen.
+</p>
+
+<p><img src="screen_bounds/ss_off.png" /></p>
+
+<p>
+This is because the code we wrote only checks the upper-left corner of
+the sprite.  If we want to really keep the sprite on the screen, we need
+to take into account the width and height of the sprite.
+</p>
+
+<h2>Step 5 : Adjust for size of player sprite</h2>
+
+<p>
+Make the following changes:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 94 - 116:</p>
+<pre class="code">
+	<disabled/>// If we need to move the player.
+	<disabled/>if (dx != 0 || dy != 0) {
+		<disabled/>// Calculate the player's new location.
+		<disabled/>int x = _xPlayer + dx;
+		<disabled/>int y = _yPlayer + dy;
+	<disabled/>
+<mark type="plus"/>		// Get the width/height of the player.
+<mark type="plus"/>		int width, height;
+<mark type="plus"/>		GetObjectSize(kObj_Player, &amp;width, &amp;height);
+<mark type="plus"/>
+		<disabled/>// Don't let the player go outside the screen boundaries.
+<mark type="arrow"/>		if (x &lt; 0 || x &gt; SCREEN_WIDTH - width)
+			<disabled/>dx = 0;
+<mark type="arrow"/>		if (y &lt; 0 || y &gt; SCREEN_HEIGHT - height)
+			<disabled/>dy = 0;
+	<disabled/>
+		<disabled/>// Record the player's new location.
+		<disabled/>_xPlayer += dx;
+		<disabled/>_yPlayer += dy;
+	<disabled/>
+		<disabled/>// Move the player to the new location.
+		<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>}
+</pre>
+
+<p>
+And the player's movement will be constrained to within the screen boundaries.
+</p>
+
+
+<h2>Finished!</h2>
+
+<p>
+Done.
+</p>
+
+<div id="filelink_bkgd"><div id="filelink">
+<h1>Links to completed project</h1>
+<p>GBA:</p>
+<ul>
+<li><a href="screen_bounds/gba/game_state.h">game_state.h</a></li>
+<li><a href="screen_bounds/gba/game_state.cpp">game_state.cpp</a></li>
+<li><a href="screen_bounds/gba/screenbounds.gba">screenbounds.gba</a></li>
+</ul>
+<p>NDS:</p>
+<ul>
+<li><a href="screen_bounds/nds/game_state.h">game_state.h</a></li>
+<li><a href="screen_bounds/nds/game_state.cpp">game_state.cpp</a></li>
+<li><a href="screen_bounds/nds/screenbounds.nds">screenbounds.nds</a></li>
+</ul>
+</div></div>
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2008-9 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>
