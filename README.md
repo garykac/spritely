@@ -20,3 +20,5 @@ A set of basic tutorials is also available.
 For suggestions/bug-reports, go to the Issues tab and edit an existing entry or
 add a new one. Send other comments to ɯoɔ˙ןıɐɯƃ@ɔɐʞʎɹɐƃ - please include
 "spritely" in the subject line.
+
+![Screenshot](images/misc/sample_sm.png)
