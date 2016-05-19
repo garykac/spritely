@@ -1,0 +1,6 @@
+{
+  "name": "Spritely",
+  "tagline": "Sprite editor for GBA and NDS projects.",
+  "body": "# Spritely\r\n\r\nSpritely is an editor that allows you to easily create sprites for Gameboy\r\nAdvance (GBA) and Nintendo DS (NDS) programming projects. It is designed\r\nspecifically for programmers who are just starting out in GBA/NDS game\r\ndevelopment.\r\n\r\nSpritely is best described as a simple paint program that allows you to create\r\na set of foreground/background sprites and screen maps. It also includes an\r\n\"Export...\" option that creates a complete GBA/NDS project - source code,\r\nmakefile and all.\r\n\r\nIn conjunction with [devkitPro](https://sourceforge.net/projects/devkitpro/) and\r\nan emulator like [VisualBoyAdvance](https://sourceforge.net/projects/vba/), you\r\ncan easily create your own GBA/NDS games and get started in the wonderful world\r\nof homebrew.\r\n\r\nA set of basic tutorials is also available.\r\n\r\nFor suggestions/bug-reports, go to the Issues tab and edit an existing entry or\r\nadd a new one. Send other comments to ɯoɔ˙ןıɐɯƃ@ɔɐʞʎɹɐƃ - please include\r\n\"spritely\" in the subject line.\r\n\r\n![Screenshot](images/misc/sample_sm.png)\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
