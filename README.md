@@ -10,8 +10,8 @@ a set of foreground/background sprites and screen maps. It also includes an
 "Export..." option that creates a complete GBA/NDS project - source code,
 makefile and all.
 
-In conjunction with (devkitPro)[https://sourceforge.net/projects/devkitpro/] and
-an emulator like (VisualBoyAdvance)[https://sourceforge.net/projects/vba/], you
+In conjunction with [devkitPro](https://sourceforge.net/projects/devkitpro/) and
+an emulator like [VisualBoyAdvance](https://sourceforge.net/projects/vba/), you
 can easily create your own GBA/NDS games and get started in the wonderful world
 of homebrew.
 
