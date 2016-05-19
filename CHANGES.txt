@@ -1,0 +1,200 @@
+Change History for Spritely: code.google.com/p/spritely
+Official binary releases are noted with "*** BINARY RELEASE ***" after
+  the version number
+
+0.20.26
+Tutorials:
+  Fix image links to use "/" instead of "\" - works in IE/Chrome/Safari, but breaks in Firefox.
+  Update mime-type of .css files to text/css so they work in Firefox (IE/Chrome/Safari OK).
+Arrange Forms in subdirectories.
+Verify with devkitPro 26
+Fix bug with hilighting of option buttons in sprite editor.
+Merge SpriteList into SpriteSet
+Start adding Palette256 support
+  Add Palette base class
+  Add IPaletteForm + stub Palette256Form
+  Move Palette16.UndoData -> PaletteColorData
+Add debug Trace form
+
+0.14.22 *** BINARY RELEASE ***
+Added Project::Platform menu to select GBA/NDS.
+  UI elements (bgmaps, export) adjust based on this setting.
+Tutorial generation:
+  Write links to completed files.
+Generated code:
+  Added CheckKeyPress, CheckKeyHeld.
+
+0.14.19
+Add undo support for background map editing
+Fix undo bug after file load where original image after load wasn't recorded
+  in a snapshot
+Add toolbox buttons to enable/disable tilegrid and screen boundary display
+  in background map editor
+Reorganize toolbox code/display to eliminate blank space
+Breakout arrowbox and optionbox tools into separate toolbox classes 
+Move display options into option toolbox
+Remove Options menu and dialog
+Fix duplicate sprite bugs:
+  New sprite wasn't selected.
+  Undoing edits in duplicated sprite resulted in empty sprite:
+Add properties info window for BgImages (to allow rename) 
+Update generated code to work with devkitARM release 24
+Update tutorials
+(Debug) Add automatic tutorial verification tests
+
+0.14.8
+Add floodfill (paintbucket) tool to background maps
+Fix redo bug (can't redo the very first undo action)
+Update (debug) UndoHistory window to show history for all 3 tabs
+Fix bug where undo/redo of sprite subpalette change did not update palette
+  window
+Activate menu items during App.Idle so that key shortcuts work consistently
+Unittests: Undo/Redo for AddSprite/Editsprite
+
+0.14.6
+Add icon
+Change transparent color display to use gray pattern instead of red 'x'.
+Remove option to display transparent color (always drawn as patten now).
+Adjust window size when app launches
+Cleanup Project menu on file close/load
+Add ColorEditor dialog
+Add basic Undo/Redo unittests
+Fix ParseHexString unittest
+Update generated code:
+  Broke SetupStage and Update into separate routines for each stage.
+
+0.14.2
+Update background image code to work on NDS.
+  (NDS doesn't support paletted background images)
+
+0.14.1
+Force window updates when display options change.
+Force window updates after applying undo/redo actions.
+Re-enable color encoding window.
+Add Background Image tab to import images.
+Add background image export (GBA 240x160 only)
+Support image import
+Fix show/hide display of UndoHistory window (test only)
+Fix map loading to use correct spriteset id.
+Update generated code:
+  backgrounds.cpp|h renamed to background_maps.cpp|h
+  Added background_images.cpp|h
+  Added game_utils.cpp
+  Added code to manage game stages
+
+0.13.29
+Fix bug with map tile ids. Previously the internal tile id would be
+  written out instead of the tile export id, which would lead to 
+  invalid tile ids being written into the map when bgsprites had
+  been deleted from the tileset.
+Fix subpalette select to update the sprite subpalette and redraw the
+  spriteset and map windows.
+Fix sprite unittests (check for null mainform).
+Fix scrollbar in spriteset window
+Fix add sprite so that it selects the newly added sprite.
+Fix SpritesetForm's palette combobox to display name of palette.
+Fix sprite toolbox: tool select, bucket, eyedropper
+Fix background map editing
+Remove old UI forms, classes
+
+0.13.28
+Switch to new UI:
+  Subwindows for each UI component: spriteset, sprite, palette, map.
+  Background tile editing and map editing now on same tab.
+  Eventually will allow multiple subwindows for each type.
+  Ownerdraw tabs in new project window so that the area to the right of
+    the last tab isn't drawn in the dark "MDI background" color.
+Note:
+  Numerous UI elements are not completely hooked up and this version
+    is not completely functional.
+
+0.13.17 *** BINARY RELEASE ***
+Update generated code:
+  Add palettes.h to store palette types and definitions.
+    Select "Update project files" when exporting.
+  In sprite.h:
+    Add constant for number of palettes (currently 1)
+      'kNumPalettes'
+    Add constant for number of spritesets (currently 1)
+      'kNumSpritesets'
+    Add constant for each spriteset (currently only 1)
+      'kSpriteset_' + <spriteset-name>
+    Make sprite constants begin with spriteset name:
+      'k' + <spriteset-name> + '_' + <sprite-name>
+      Previously, is was 'kSprite_' + <sprite-name>
+  In backgrounds.h:
+    Add constant for number of bgpalettes (currently 1)
+      'kNumBgPalettes'
+    Add constant for number of bgtilesets (currently 1)
+      'kNumBgTilesets'
+    Add constant for number of bgmaps (currently 1)
+      'kNumBgMaps'
+    Add constant for each bgtileset (currently only 1)
+      'kBgTileset_' + <tileset-name>
+    Add constant for each bgmap (currently only 1)
+      'kBgMap_' + <map-name>
+    Add constants for each background tile:
+      1x1: 'k' + <tileset-name> + '_' + <bgsprite-name>
+      if multiple tiles, add '_' + <tile> at end
+Fix exception when clicking on edit-sprite pane when no sprite is selected.
+Change save file format to support/prepare for future enhancements:
+  multiple spritesets, palettes, bgtilesets, bgmaps
+  256-color palettes, bgimages, sounds
+  (note: none of these features are implemented yet, but are planned for
+    future releases)
+Create new classes to manage multiple palettes, spritesets and maps
+Add new project interface prototype (devel version only)
+Add unit tests for file load (old/new version)
+
+0.8.7 *** BINARY RELEASE ***
+Auto-generate collision bitmasks for each sprite.
+Add pixel-perfect collision routines to collision.cpp
+Add (debug only) CollisionTest dialog.
+Change generated code to use a class for GameState instead of a struct.
+Fix bug where undo after editing a duplicated sprite would result in an empty
+  sprite. Repro: duplicate sprite with some pixels set, edit the new sprite,
+  undo edit results in empty sprite.
+Fix bug where deleting multiple sprites in a row would result in no sprite
+  becoming the current selection after the delete.
+Fix bug where collision.(cpp|h) were not included in the auto-generated
+  Programmer's Notepad project.
+
+0.7.6 *** BINARY RELEASE ***
+Fix bug where DC_FlushRange wasn't being called for NDS projects
+  NDS projects worked in emulation, but not on real hardware.
+Fix compilation problem with NDS projects referring to GBA headers
+  (in collision.cpp).
+Enable backgrounds in NDS.
+Add GBA/NDS tools to dispay screen outline on background map
+Fix bug where files in the "Recent Files" menu that no longer existed would
+  still try to be opened.
+Keep track of current platform so that the export dialog doesn't need to
+  be updated each time for NDS.
+Inherit platform from current state of GBA/NDS tools on BackgroundMap tab.
+Add option to enable/disable screen boundary and grid in Map edit.
+Add option to enable/disable sprite pixel and sprite tile grid
+
+0.7.1 *** BINARY RELEASE ***
+Merge VerticalFlipObject and HorizontalFlipObject into FlipObject
+Merge ShowObject and HideObject into ShowObject
+Automatically generate Programmer's Notepad project (pnproj) file when
+  exporting
+Add Rotate (90 clockwise, 90 counterclockwise, 180)
+Add Flip (horizontal, vertical, both)
+Add File::Recent Files menu
+Fix bug where sprites didn't get moved into correct spritelist group when
+  resized larger
+Fix bug where undoing a sprite resize (or rotate) would render the sprite in
+  the old group in the spritelist.
+
+0.6.8 *** BINARY RELEASE ***
+Change InitObject() to no longer require starting x,y coords
+  Add MoveObjectTo() after InitObject() in generated code.
+  This allows us to call GetObjectWidth(), et al, when calculating the initial
+  position of the object.
+Add option in Export dialog to update the project. This updates all project
+  files except for game_state.(cpp|h) and makes it easier for previously
+  generated projects to be updated to the latest project code (without
+  overwriting the project-specific code in game_state.(cpp|h).
+Update About dialog to include reference to http://code.google.com/p/spritely
+  location.
