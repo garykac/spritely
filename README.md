@@ -17,7 +17,7 @@ an emulator like [VisualBoyAdvance](https://sourceforge.net/projects/vba/), you
 can easily create your own GBA/NDS games and get started in the wonderful world
 of homebrew.
 
-You can download the [latest version of Spritely](https://github.com/garykac/spritely/blob/gh-pages/downloads/Spritely_0.13.17.zip).
+You can download the [latest version (v0.14.22) of Spritely](https://github.com/garykac/spritely/blob/gh-pages/downloads/Spritely_0.14.22.zip).
 
 A [set of basic tutorials](http://garykac.github.io/spritely/tutorials/index.html) is also available.
 
