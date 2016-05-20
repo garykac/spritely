@@ -15,7 +15,7 @@ an emulator like [VisualBoyAdvance](https://sourceforge.net/projects/vba/), you
 can easily create your own GBA/NDS games and get started in the wonderful world
 of homebrew.
 
-A set of basic tutorials is also available.
+A [set of basic tutorials](http://garykac.github.io/spritely/tutorials/index.html) is also available.
 
 For suggestions/bug-reports, go to the Issues tab and edit an existing entry or
 add a new one. Send other comments to ɯoɔ˙ןıɐɯƃ@ɔɐʞʎɹɐƃ - please include
