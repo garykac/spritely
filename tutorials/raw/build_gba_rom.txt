@@ -1,0 +1,134 @@
+NAME build_gba_rom
+TITLE Building a GBA ROM File
+PROJECT_NAME none
+CATEGORY Getting Started
+AUTHOR Copyright &copy;2008-9 Gary Kacmarcik
+
+<p>
+After you've successfully exported your project in Spritely, you're now ready to build the
+GBA ROM file from the exported data. This tutorial will show you how to do that
+using the DOS command prompt.
+</p>
+
+<p>
+You can also build/run your project from within Programmer's Notepad.
+See
+TUTORIAL_LINK using_pn Using Programmer's Notepad
+for more information.
+</p>
+
+<hr/>
+
+# =================================================================
+STEP Launch a DOS command prompt
+# =================================================================
+
+<p>
+First, click on the "Start" menu in the lower left corner of your screen.
+</p>
+
+<p>
+This will pull up a menu that should look something like one of the examples shown here.
+</p>
+
+IMAGE build_rom_01.png
+<p>or</p>
+IMAGE build_rom_02.png
+
+<p>
+Find the "Run..." command near the bottom of this menu and click on it.
+</p>
+
+<p>
+This will bring up the "Run" dialog.
+</p>
+
+IMAGE build_rom_03.png
+
+<p>
+Enter cmd into the edit field and press the "OK" button.
+</p>
+
+<p>
+This will bring up a "Command Prompt" that will allow you to enter the commands needed
+to build your GBA project.
+</p>
+
+IMAGE build_rom_04.png
+
+# =================================================================
+STEP Go to your project's directory
+# =================================================================
+
+<p>
+Unfortunately, it starts out in the wrong directory, so we'll need to go to
+the correct directory before we can build.
+</p>
+
+<p>
+Use the <tt>cd</tt> ("change directory") command to go to your project's directory:
+</p>
+
+<pre>   cd \gamedev\projects\mygame</pre>
+
+<p>Note the space between <tt>cd</tt> and <tt>\</tt>.</p>
+
+<p>
+Also, you'll need to replace "mygame" with the name you chose earlier when exporting
+your project.
+</p>
+
+<p>
+Make sure to press the "Enter" key after you type in the command.
+</p>
+
+IMAGE build_rom_05.png
+
+# =================================================================
+STEP <tt>Make</tt> your project
+# =================================================================
+
+<p>
+Once you're in the correct directory, type:
+</p>
+
+<pre>   make</pre>
+
+<p>
+and press Enter.
+</p>
+
+IMAGE build_rom_06.png
+
+<p>You'll see a bunch of messages printed out in the Command Prompt window that you can
+ignore (for now).
+</p>
+
+IMAGE build_rom_07.png
+
+<p>
+The only important parts are the last 2 lines, which should say
+</p>
+
+<pre>   built ... mygame.gba
+   ROM fixed!</pre>
+
+<p>
+if the build was successful.
+</p>
+
+FINISH
+
+<p>
+If you open your project directory, you'll see the new files that were created.
+</p>
+
+IMAGE build_rom_08.png
+
+<blockquote><tt>build/</tt> &mdash; This directory contains temporary files that the compiler used when building the ROM file. </blockquote>
+<blockquote><tt>mygame.elf</tt> &mdash; This is another temporary file.</blockquote>
+<blockquote><tt>mygame.gba</tt> &mdash; This is the ROM file that contains your game!</blockquote>
+
+<p>
+You're now ready to run your ROM and see how your sprite looks.
+</p> 

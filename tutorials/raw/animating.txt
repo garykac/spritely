@@ -1,0 +1,328 @@
+NAME animating
+TITLE Animating the player
+PROJECT_NAME animate
+CATEGORY Basic Game Tasks
+AUTHOR Copyright &copy;2008-9 Gary Kacmarcik
+
+<p>
+This tutorial will describe how to animate your player object.
+</p>
+
+VERIFIED
+
+# =================================================================
+STEP Draw your animation frames
+# =================================================================
+
+<p>
+First, you'll need to draw the frames of your animation.
+</p>
+
+<p>
+Go to Spritely and draw a few frames of animation &mdash; you
+need at least 2 frames, but you can add as many as you like.
+When creating your sprites, you may want to make use of the 
+"Sprite::Duplicate" menu item.
+</p>
+
+IMAGE menu_duplicate.png
+
+<p>
+Make sure that your sprites are arranged in Spritely
+<b>in order</b>. If they are not in order, then they will not
+animate correctly.
+</p>
+
+# Delete the default 2x2 sprite.
+SPRITELY_ACTION delete_sprite
+
+SPRITELY_ACTION add_sprite 4x1 Bat0
+SPRITELY_ACTION draw_sample_4x1_sprite 0
+
+SPRITELY_ACTION add_sprite 4x1 Bat1
+SPRITELY_ACTION draw_sample_4x1_sprite 1
+
+IMAGE sprites_small.png
+
+# =================================================================
+STEP Name each animation frame
+# =================================================================
+
+<p>
+After you've created your new sprites. You now need to give each of your sprites a 
+unique name.
+Since these sprites are all part of the same animation, you should probably give them 
+names that are related.
+</p>
+
+<p>
+For example, if you have 3 sprites in your animation you can name them:
+</p>
+
+<pre>
+&nbsp;&nbsp;&nbsp;Player_first
+&nbsp;&nbsp;&nbsp;Player_X
+&nbsp;&nbsp;&nbsp;Player_last
+</pre>
+
+<p>
+or
+</p>
+
+<pre>
+&nbsp;&nbsp;&nbsp;Player_0
+&nbsp;&nbsp;&nbsp;Player_1
+&nbsp;&nbsp;&nbsp;Player_2
+</pre>
+
+<p>
+or whatever other naming scheme you prefer. The important thing is
+that you give them all unique names and that you remember the name
+of the first and last sprite.
+</p>
+
+<p>
+Because we have bats, in this example we'll be using <tt>Bat0</tt> and <tt>Bat1</tt>.
+</p>
+
+IMAGE bat0_name.png
+
+IMAGE bat1_name.png
+
+# =================================================================
+STEP Export
+# =================================================================
+
+<p>
+Export your project and open the project file so that we can edit code..
+</p>
+
+SPRITELY_ACTION export full
+
+# =================================================================
+STEP Add variables to keep track of animation
+# =================================================================
+
+<p>
+Now that we've created the sprites, we need to make use of them.
+</p>
+
+<p>
+Open up <tt>game_state.h</tt> and find:
+</p>
+
+FIND game_state.h
+.private:
+.	// The current level of the game.
+.	int _level;
+.
+.	// The (x,y) location of the object representing the player.
+.	int _xPlayer, _yPlayer;
+.};
+END_FIND
+
+<p>
+This code declares the variables in the <tt>GameState</tt> class that
+are used to keep track of what's going on in the game.
+</p>
+
+<p>
+By default, <tt>GameState</tt> has only 3 variables:
+the current level in the game (default = level 1),
+and the x- and y-position of the player (to keep track of
+the player's current position on the screen).
+</p>
+
+<p>
+If we want to keep animate the player, then we'll need to add new
+variables that will keep track of the current state of the animation
+(for example, which frame we are currently showing on 
+the screen).
+</p>
+
+<p>
+Modify <tt>GameState</tt> to look like the following:
+</p>
+
+UPDATE game_state.h
+.private:
+.	// The current level of the game.
+.	int _level;
+.
+.	// The (x,y) location of the object representing the player.
+.	int _xPlayer, _yPlayer;
++	
++	// Keep track of the current animation state of the player.
++	AnimationInfo animatePlayer;
+.};
+END_UPDATE
+
+<p>
+This adds a declation for an <tt>AnimationInfo</tt> structure that
+will hold all of the animation information for the player.
+</p>
+
+<p>
+If you try to compile now, you'll get the following error:
+</p>
+
+<pre class="code">
+game_state.h:43: error: 'AnimationInfo' does not name a type
+</pre>
+
+<p>
+This is because the <tt>AnimationInfo</tt> structure is defined in
+<tt>animation.h</tt>. To fix this problem, we need to 
+include a reference to this file at the top of <tt>game_state.h</tt>. 
+</p>
+
+UPDATE game_state.h
++#include "animation.h"
+.#include "sprites.h"
+.#include "background_maps.h"
+END_UPDATE
+
+# =================================================================
+STEP Initialize animation
+# =================================================================
+
+<p>
+Now that we've allocated space to store the animation info, we need
+to initialize it.
+</p>
+
+<p>
+In <tt>game_state.cpp</tt> and find:
+</p>
+
+FIND game_state.cpp
+.	// Initialize the objects for the first level.
+.	InitObject(kObj_Player, 0);
+.
+.	// Set the initial location of each object.
+.	_xPlayer = 0;
+.	_yPlayer = 0;
+.	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.
+.	// TODO: Add more initialization for level 1 here.
+END_FIND
+
+<p>
+And add/change the following lines:
+</p>
+
+UPDATE game_state.cpp
+.	// Initialize the objects for the first level.
+<	InitObject(kObj_Player, 0);
+>	InitObject(kObj_Player, kSprites_Bat0);
+.
+.	// Set the initial location of each object.
+.	_xPlayer = 0;
+.	_yPlayer = 0;
+.	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.
++	// Initialize the animation for the player object.
++	InitAnimation(&animatePlayer, kObj_Player,
++					kSprites_Bat0, kSprites_Bat1, 10);
++	
+.	// TODO: Add more initialization for level 1 here.
+END_UPDATE
+
+<p>
+This adds sets up the animation for the <tt>kObj_Player</tt> object.
+<tt>kSprites_Bat0</tt> and <tt>kSprites_Bat1</tt> should be
+replaced by the name that you chose for your first and last sprite.
+</p>
+
+<p>
+The last value, <tt>10</tt>, controls how fast your object will
+animate &mdash; that is, how long it should wait before advancing
+to the next frame of your animation.  Making this number larger will
+slow down the animation; making it smaller will speed up the animation.
+Since each frame is 1/60th of
+a second, setting this to 10 means that the animation frame will change
+6 times per second.
+</p>
+
+# =================================================================
+STEP Build
+# =================================================================
+
+VERIFY_BUILD
+
+<p>
+Build the project to make sure we don't have any errors. You won't see any
+changes yet because we need to add code to continuously update the 
+animation.
+</p>
+
+# =================================================================
+STEP Update animation
+# =================================================================
+
+<p>
+Now that you've initialized your animation, you need to update the animation.
+</p>
+
+<p>
+At the bottom of <tt>game_state.cpp</tt>, find the code that moves the
+player:
+</p>
+
+FIND game_state.cpp
+.	// If we need to move the player.
+.	if (dx != 0 || dy != 0) {
+.		// Record the player's new location.
+.		_xPlayer += dx;
+.		_yPlayer += dy;
+.
+.		// Move the player to the new location.
+.		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.	}
+.
+.	// TODO: Add additional game state updates for level 1 here.
+.}
+END_FIND
+
+<p>
+and add the following line right before the <tt>TODO</tt> comment:
+</p>
+
+UPDATE game_state.cpp
+.	// If we need to move the player.
+.	if (dx != 0 || dy != 0) {
+.		// Record the player's new location.
+.		_xPlayer += dx;
+.		_yPlayer += dy;
+.
+.		// Move the player to the new location.
+.		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+.	}
+.
++	UpdateAnimation(&animatePlayer);
++
+.	// TODO: Add additional game state updates for level 1 here.
+.}
+END_UPDATE
+
+# =================================================================
+STEP Build/Run
+# =================================================================
+
+<p>
+If you build and run your project now, you'll have an animated player object.
+</p>
+
+VERIFY_BUILD
+
+IMAGE ss_bat.png
+
+# =================================================================
+FINISH
+# =================================================================
+
+<p>
+We're done.
+</p>
+
+FILE_LINKS

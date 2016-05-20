@@ -1,0 +1,158 @@
+// oam_info.h
+
+// Object Attribute Memory
+
+// This area contains data for up to 128 sprites intermixed with
+// up to 32 sets of rotation data that can be applied to these
+// sprites.
+//
+// The entries are set up as follows, where the 8 bytes of rotation
+// data (PA-PD) are spread across the last 2 bytes of 4 sprite data blocks.
+//
+//                 Sprite Attributes         Rotation Data
+//              +------------------------+  +--------------+
+//  0x07000000  | Sprite 0 Attribute 0   |  | -            |
+//  0x07000002  |          Attribute 1   |  | -            |
+//  0x07000004  |          Attribute 2   |  | -            |
+//  0x07000006  | -                      |  | Rotate  0 PA |
+//              +------------------------+  |              |
+//  0x07000008  | Sprite 1 Attribute 0   |  | -            |
+//  0x0700000a  |          Attribute 1   |  | -            |
+//  0x0700000c  |          Attribute 2   |  | -            |
+//  0x0700000e  | -                      |  | Rotate  0 PB |
+//              +------------------------+  |              |
+//  0x07000010  | Sprite 2 Attribute 0   |  | -            |
+//  0x07000012  |          Attribute 1   |  | -            |
+//  0x07000014  |          Attribute 2   |  | -            |
+//  0x07000016  | -                      |  | Rotate  0 PC |
+//              +------------------------+  |              |
+//  0x07000018  | Sprite 3 Attribute 0   |  | -            |
+//  0x0700001a  |          Attribute 1   |  | -            |
+//  0x0700001c  |          Attribute 2   |  | -            |
+//  0x0700001e  | -                      |  | Rotate  0 PD |
+//              +------------------------+  +--------------+
+//  0x07000020  | Sprite 4 Attribute 0   |  | -            |
+//  0x07000022  |          Attribute 1   |  | -            |
+//  0x07000024  |          Attribute 2   |  | -            |
+//  0x07000026  | -                      |  | Rotate  1 PA |
+//              +------------------------+  |              |
+//
+//  ...         | ...                    |  | ...          |
+//
+//              +------------------------+  |              |
+//  0x070003f0  | Sprite 126 Attribute 0 |  | -            |
+//  0x070003f2  |            Attribute 1 |  | -            |
+//  0x070003f4  |            Attribute 2 |  | -            |
+//  0x070003f6  | -                      |  | Rotate 31 PC |
+//              +------------------------+  |              |
+//  0x070003f8  | Sprite 127 Attribute 0 |  | -            |
+//  0x070003fa  |            Attribute 1 |  | -            |
+//  0x070003fc  |            Attribute 2 |  | -            |
+//  0x070003fe  | -                      |  | Rotate 31 PD |
+//              +------------------------+  +--------------+
+//
+// The rotation data is used by:
+//    (1) setting the ROTATE_ENABLE bit in Attribute 0 for the sprite
+//        that is to be rotated, and
+//    (2) by giving the index (0-31) of the rotation data in Attribute 1.
+// (see below for more info)
+//
+//
+// So, OAM can be looked at two different ways:
+//
+// First, as a array of attributes for 128 sprites
+// (8 bytes for each entry but the last 2 bytes of each
+// entry are ignored).
+//
+// and also as an array of rotation data for 32 sprites
+// (32 bytes for each entry, but only 8 bytes of data)
+//
+// Attribute 0
+// ===========
+//
+//  15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+// |   S0  | A | M |   T   | D | R |            Y-COORD            |
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+//
+//   0-7: Y-COORD - y coord of sprite
+//     8: R - Rotation/Scaling enable
+//     9: D - Double size enable
+// 10-11: T - Transparency
+//        00=normal, 01=semi-transparent, 10=obj window, 11=illegal
+//    12: M - Mosaic enable
+//    13: A - Color depth
+//        0=16 color, 1=256 color
+// 14-15: S0 - Sprite Shape
+//        this combines with S1 in Attr 1 to determine the sprite size
+//
+// Attribute 1
+// ===========
+//
+// if ROTATE_ENABLE=0 in Attribute 0:
+//  15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+// |   S1  | V | H | 0   0   0 |              X-COORD              |
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+//
+// if ROTATE_ENABLE=1 in Attribute 0:
+//  15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+// |   S1  |        RI         |              X-COORD              |
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+//
+//   0-8: X-COORD - x coord of sprite
+//  9-13: RI - Rotation Index
+//        index of rotation data to use for this sprite
+//    12: H - Horizontal flip
+//    13: V - Vertical flip
+// 14-15: S1 - Sprite Size
+//        this combines with S0 in Attr 0 to determine the sprite size
+//
+// Attribute 2
+// ===========
+//
+//  15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+// |      PAL      |   PR  |               TILE-INDEX              |
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+//
+//   0-9: TILE-INDEX - index of first tile for this sprite
+// 11-10: PR - Priority
+// 12-15: PAL - Palette index
+//        this is only used when 16 color palettes are enabled
+//
+// Attribute 3 (Rotate Data)
+// =========================
+//
+// The rotate data (PA,PB,PC,PD) are all encoded as fixed values.
+//
+//  15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+// | S |          INTEGER          |           FRACTION            |
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+//
+//   0-7: FRACTION - Fractional part of fixed value
+//  8-14: INTEGER - Integer part of fixed value
+//    15: S - Sign bit
+//
+//
+// The shape of the sprite object is determine by the shape and size
+// attributes:
+//
+// Sprite Size Table:
+//   Shape (S0) |  Size   (S1) | Dimensions (WxH) | # Tiles 
+// -------------+--------------+------------------+--------- 
+//  SQUARE  00    SIZE_8   00    8 x 8              1
+//  SQUARE  00    SIZE_16  01    16 x 16            4
+//  SQUARE  00    SIZE_32  10    32 x 32            16
+//  SQUARE  00    SIZE_64  11    64 x 64            64
+//   TALL   01    SIZE_8   00    8 x 16             2
+//   TALL   01    SIZE_16  01    8 x 32             4
+//   TALL   01    SIZE_32  10    16 x 32            8
+//   TALL   01    SIZE_64  11    32 x 64            32
+//   WIDE   10    SIZE_8   00    16 x 8             2
+//   WIDE   10    SIZE_16  01    32 x 8             4
+//   WIDE   10    SIZE_32  10    32 x 16            8
+//   WIDE   10    SIZE_64  11    64 x 32            32
+

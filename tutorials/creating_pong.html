@@ -1,0 +1,790 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Creating Pong</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Creating Pong</h1>
+
+<p>
+This tutorial show you how to create the game Pong from start to finish using
+Spritely.
+This tutorial will show you how to create the game Pong for the Gameboy Advance
+or Nintendo DS.
+This tutorial covers the process from start to finish using Spritely (to create
+the sprites and initial project code) and devKitPro (to build the project into
+a GBA or NDS ROM).
+</p>
+
+<p class="alert">
+This tutorial has been tested with
+<a href="http://www.devkitpro.org">devkitARM release 26</a>
+and <a href="http://code.google.com/p/spritely">Spritely version 0.19.20 beta</a>
+and verified to work for both GBA and NDS projects.
+</p>
+
+<h2>Step 1 : Create a new project</h2>
+
+Create a new directory for your project: <tt>c:\gamedev\projects\pong</tt>.
+
+<h2>Step 2 : Create your sprites</h2>
+
+<p>
+For Pong, we need to create 3 objects on the screen:
+</p>
+<ul>
+<li>the player's paddle</li>
+<li>the opponent's paddle, and</li>
+<li>the ball</li>
+</ul>
+
+<p>
+The 2 paddles look the same so they can share the same sprite. Thus, we only
+need to create 2 different sprites: one for the paddles and another for the ball.
+</p>
+
+<p>
+Launch Spritely:
+<ul>
+<li>delete the default 2x2 sprite (we don't need it)</li>
+<li>create a 1x1 solid white square for the ball</li>
+<li>create a 1x4 (tall) solid white rectangle for the paddle</li>
+</ul>
+</p>
+
+
+<p>
+Select the paint bucket tool and fill each sprite with white paint.
+</p>
+
+<p><img src="creating_pong/sprites_small.png" /></p>
+
+<h2>Step 3 : Name your sprites</h2>
+
+<p>
+We need to name the sprites so that we can refer to them (by name) in the code.
+</p>
+
+<p>
+You can change the name of a sprite by selecting the "Sprite::Properties..." menu item or
+by pressing the "Info" button in the sprite editing window.
+</p>
+
+<p>
+Name the ball "Ball" and the paddle "Paddle". Pay attention to capitalization - begin each
+name with a capital letter and be consistent.
+We'll need to remember these names when we start editing the source code.
+</p>
+
+<p><img src="creating_pong/name_ball.png" /></p>
+
+<p><img src="creating_pong/name_paddle.png" /></p>
+
+<h2>Step 4 : Create the background</h2>
+
+<p>
+Click on the "Background Maps" tab to look at the background sprites. By default, you
+should have a single 1x1 background sprite and a single background map that has this
+background sprite used throughout.
+</p>
+
+
+<p>
+Use the paint bucket and fill the 1x1 sprite with black paint.
+Once you do this, the entire background map will turn black.
+</p>
+
+<p><img src="creating_pong/bg_sprites_small.png" /></p>
+
+<h2>Step 5 : Save your progress</h2>
+
+<p>
+Select the "File::Save" menu to save your work as <tt>pong.xml</tt> in the
+<tt>c:\gamedev\projects\pong</tt> directory you created earlier.
+</p>
+
+<h2>Step 6 : Export project</h2>
+
+<p>
+Export a complete GBA project into <tt>c:\gamedev\projects\pong</tt>.
+</p>
+
+
+<p>
+See the
+<a href="create_sprite.html">Creating a simple sprite</a>
+tutorial if you need more information about how this is done.
+</p>
+
+<h2>Step 7 : Open the project in Programmer's Notepad</h2>
+
+<p>
+Open the "pong.pnproj" file. When you exported the project, this file was
+created for you in the <tt>c:\gamedev\projects\pong</tt> directory.
+</p>
+
+<p><img src="creating_pong/pnproj.png" /></p>
+
+<h2>Step 8 : Build/Run your project</h2>
+
+<p>
+Now that we're all set up, we can build and run the project.
+</p>
+
+<p>
+When you run the project, you'll see only the ball that you can move around
+using the arrow keys.
+We need
+to start modifying the source code to display the other objects and turn this into a
+complete game.
+</p>
+
+
+<p><img src="creating_pong/ss_01.png" /></p>
+
+<h2>Step 9 : Define the objects from the sprites</h2>
+
+<p>
+Remember that we need 3 objects for pong: 2 paddles (1 each for the player
+and opponent) and 1 ball. Let's define these objects.
+</p>
+
+<p>
+In the GBA and NDS, we can have a maximum of 128 objects, numbered 0 through 127.
+We're already using object #0 for the player, so we'll use object #1 and #2 for the
+opponent and ball.
+</p>
+
+<p>
+Open <tt>game_state.h</tt> and look for the following lines:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 14 - 16:</p>
+<pre class="code">
+// The objects in our game.
+// Only 128 objects (0-127) can be defined at any time.
+const int kObj_Player = 0;
+</pre>
+
+<p>
+This assigns the player object to object #0.
+</p>
+
+<p>
+Add the following 2 lines immediately after:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 14 - 18:</p>
+<pre class="code">
+<disabled/>// The objects in our game.
+<disabled/>// Only 128 objects (0-127) can be defined at any time.
+<disabled/>const int kObj_Player = 0;
+<mark type="plus"/>const int kObj_Opponent = 1;
+<mark type="plus"/>const int kObj_Ball = 2;
+</pre>
+
+<p>
+Here we are assigning the opponent's paddle (kObj_Opponent) to object 1 and the 
+ball (kObj_Ball) to object 2.
+</p>
+
+<p>
+Pay attention to capitalization!
+You'll need to remember (and type) these names later.
+</p>
+
+<h2>Step 10 : Add storage for the object locations</h2>
+
+<p>
+We need to keep track of each object's location on the screen, so we need to
+add the following to the GameState class:
+</p>
+
+<p>
+Look for the following lines in <tt>game_state.h</tt>:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 41 - 43:</p>
+<pre class="code">
+	// The (x,y) location of the object representing the player.
+	int _xPlayer, _yPlayer;
+};
+</pre>
+
+<p>
+and add the following lines immediately after:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 41 - 49:</p>
+<pre class="code">
+	<disabled/>// The (x,y) location of the object representing the player.
+	<disabled/>int _xPlayer, _yPlayer;
+<mark type="plus"/>
+<mark type="plus"/>	// The (x,y) location of the opponent's paddle.
+<mark type="plus"/>	int _xOpponent, _yOpponent;
+<mark type="plus"/>
+<mark type="plus"/>	// The (x,y) location of the ball.
+<mark type="plus"/>	int _xBall, _yBall;
+<disabled/>};
+</pre>
+
+<p>
+Just like the earlier <tt>int _xPlayer, _yPlayer;</tt> line defined space to store
+the x- and y-coordinate of the player, these lines define space to store the
+x- and y-coordinate of the opponent (the opponent's paddle) and the ball.
+</p>
+
+<p>
+Build your project after making these changes to make sure you don't have any
+compilation errors.
+Don't bother running since we haven't changed anything important yet. You won't see
+any visible differences from the previous version.
+</p>
+
+
+<h2>Step 11 : Create the new objects</h2>
+
+<p>
+Open <tt>game_state.cpp</tt> and look for the following lines in <tt>GameState::SetupStage_Level1</tt>:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 49:</p>
+<pre class="code">
+	// Initialize the objects for the first level.
+	InitObject(kObj_Player, 0);
+</pre>
+
+<p>
+Change this to:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 49:</p>
+<pre class="code">
+	<disabled/>// Initialize the objects for the first level.
+<mark type="arrow"/>	InitObject(kObj_Player, kSprites_Paddle);
+</pre>
+
+<p>
+This will force the player object user the "Paddle" sprite.
+</p>
+
+<p>
+Add the following 2 lines immediately after:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 51:</p>
+<pre class="code">
+	<disabled/>// Initialize the objects for the first level.
+	<disabled/>InitObject(kObj_Player, kSprites_Paddle);
+<mark type="plus"/>	InitObject(kObj_Opponent, kSprites_Paddle);
+<mark type="plus"/>	InitObject(kObj_Ball, kSprites_Ball);
+</pre>
+
+
+<p>
+These lines create the other 2 objects that we need for the game: the <i>Opponent</i>,
+which also uses a "Paddle" sprite and the <i>Ball</i>, which uses a "Ball" sprite.
+</p>
+
+<h2>Step 12 : Initialize the object location</h2>
+
+<p>
+Further down in <tt>GameState::SetupStage_Level1()</tt>, find:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 53 - 59:</p>
+<pre class="code">
+	// Set the initial location of each object.
+	_xPlayer = 0;
+	_yPlayer = 0;
+	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+
+	// TODO: Add more initialization for level 1 here.
+}
+</pre>
+
+<p>
+These lines move the player object to its initial position. Change the <tt>_xPlayer = 0;</tt>
+line to:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 53 - 59:</p>
+<pre class="code">
+	<disabled/>// Set the initial location of each object.
+<mark type="arrow"/>	_xPlayer = SCREEN_WIDTH - GetObjectWidth(kObj_Player) - 8;
+	<disabled/>_yPlayer = 0;
+	<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>
+	<disabled/>// TODO: Add more initialization for level 1 here.
+<disabled/>}
+</pre>
+
+<p>
+This will put the player's paddle on the right side of the screen. It calculates this position
+by starting from the right side of the screen (SCREEN_WIDTH) and subtracting off the width
+of the player's paddle (GetObjectWidth(kObj_Player). It then subtracts off an additional
+8 pixels to add a bit of space behind (to the right of) the player's paddle.
+</p>
+
+<p>
+We can now initialize the remaining objects (the opponent and the ball).
+Add the following lines immediately after:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 53 - 67:</p>
+<pre class="code">
+	<disabled/>// Set the initial location of each object.
+	<disabled/>_xPlayer = SCREEN_WIDTH - GetObjectWidth(kObj_Player) - 8;
+	<disabled/>_yPlayer = 0;
+	<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>
+<mark type="plus"/>	_xOpponent = 8;
+<mark type="plus"/>	_yOpponent = 0;
+<mark type="plus"/>	MoveObjectTo(kObj_Opponent, _xOpponent, _yOpponent);
+<mark type="plus"/>
+<mark type="plus"/>	_xBall = SCREEN_WIDTH / 2;
+<mark type="plus"/>	_yBall = 0;
+<mark type="plus"/>	MoveObjectTo(kObj_Ball, _xBall, _yBall);
+<mark type="plus"/>
+	<disabled/>// TODO: Add more initialization for level 1 here.
+<disabled/>}
+</pre>
+
+<p>
+This places the opponent's paddle on the left side of the screen (with 8 pixels of space
+behind it) and puts the ball at the middle of the top of the screen.
+</p>
+
+<h2>Step 13 : Build/Run</h2>
+
+
+<p>
+If you run now, you'll see 3 objects on the screen in their correct initial positions.
+</p>
+
+<p>
+Only the player paddle will move - but it can move all over the screen. We need to fix it
+so that it only moved up and down. We also need to constrain the movement to stay within the
+screen bounds.
+</p>
+
+<p><img src="creating_pong/ss_02.png" /></p>
+
+<p>
+Let's make it so that the paddle only goes up/down:
+</p>
+
+<h2>Step 14 : Restrict player paddle movement</h2>
+
+<p>
+In <tt>GameState::Update_Level1()</tt>, which is a bit further down in <tt>game_state.cpp</tt>,
+remove the lines that handle the left and right arrow keys:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 83 - 95:</p>
+<pre class="code">
+	<disabled/>// The arrow keys are used to move the current object.
+	<disabled/>// We use CheckKeyHeld() because we want the action to repeat as long
+	<disabled/>// as the player is holding down the button.
+	<disabled/>int dx = 0;
+	<disabled/>int dy = 0;
+<mark type="cross"/>	if (CheckKeyHeld(KEY_LEFT))
+<mark type="cross"/>		dx = -1;
+<mark type="cross"/>	if (CheckKeyHeld(KEY_RIGHT))
+<mark type="cross"/>		dx = 1;
+	<disabled/>if (CheckKeyHeld(KEY_UP))
+		<disabled/>dy = -1;
+	<disabled/>if (CheckKeyHeld(KEY_DOWN))
+		<disabled/>dy = 1;
+</pre>
+
+<p>
+To prevent the paddle from going off the top or the bottom of the screen,
+insert the following lines:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 100 - 115:</p>
+<pre class="code">
+	<disabled/>// If we need to move the player.
+	<disabled/>if (dx != 0 || dy != 0) {
+<mark type="plus"/>		// Calculate the player's new y-location.
+<mark type="plus"/>		int y = _yPlayer + dy;
+<mark type="plus"/>
+<mark type="plus"/>		// Don't let the player go outside the screen boundaries.
+<mark type="plus"/>		if (y &lt; 0 || y &gt; SCREEN_HEIGHT - GetObjectHeight(kObj_Player))
+<mark type="plus"/>			dy = 0;
+<mark type="plus"/>
+		<disabled/>// Record the player's new location.
+		<disabled/>_xPlayer += dx;
+		<disabled/>_yPlayer += dy;
+	<disabled/>
+		<disabled/>// Move the player to the new location.
+		<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>}
+</pre>
+
+<p>
+This checks the player position against the screen boundary and stops the movement (by setting
+<tt>dy = 0;</tt>).
+</p>
+
+<h2>Step 15 : Build/Run</h2>
+
+<p>
+If you build and run, the player's paddle only moves up and down.
+</p>
+
+
+<p>
+Let's make the ball move.
+</p>
+
+<h2>Step 16 : Make the ball move</h2>
+
+<p>
+Go to the end of <tt>GameState::Update_Level1()</tt> (which is at the end of <tt>game_state.cpp</tt>)
+and look for: </p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 117 - 118:</p>
+<pre class="code">
+	// TODO: Add additional game state updates for level 1 here.
+}
+</pre>
+
+<p>
+And add the following code before the comment:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 117 - 122:</p>
+<pre class="code">
+<mark type="plus"/>	// Move the ball.
+<mark type="plus"/>	_xBall += 1;
+<mark type="plus"/>	_yBall += 1;
+<mark type="plus"/>	MoveObjectTo(kObj_Ball, _xBall, _yBall);
+<mark type="plus"/>
+	<disabled/>// TODO: Add additional game state updates for level 1 here.
+<disabled/>}
+</pre>
+
+<h2>Step 17 : Build/Run</h2>
+
+
+<p>
+Build and run. The ball moves, but it only goes down/right and it goes off the screen.
+It comes back after a while only to fly off again.
+</p>
+
+<p><img src="creating_pong/ss_03.png" /></p>
+
+<p>
+We want the ball to move different directions and we want it to bounce when it gets
+to the edge of the screen.
+</p>
+
+<h2>Step 18 : Add storage for the ball direction</h2>
+
+<p>
+Just like we need to keep track of the current ball <i>position</i>, we also need to keep
+track of its current <i>direction</i>. This will allow us to change the ball's direction
+and have it bounce correctly off of other objects.
+</p>
+
+<p>
+Let's make some room to save the balls current direction. Go back to <tt>game_state.h</tt>
+and add the following to the GameState class:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 47 - 52:</p>
+<pre class="code">
+	<disabled/>// The (x,y) location of the ball.
+	<disabled/>int _xBall, _yBall;
+<mark type="plus"/>
+<mark type="plus"/>	// The current direction that the ball is moving (-1 or 1).
+<mark type="plus"/>	int _dxBall, _dyBall;
+<disabled/>};
+</pre>
+
+<p>
+These variables keep track of the x-direction (is the ball moving left or right)
+and the y-direction (is it moving up or down) for the ball.
+</p>
+
+<h2>Step 19 : Initialize the ball direction</h2>
+
+<p>
+Now go back to <tt>game_state.cpp</tt> and initialize the ball direction.
+</p>
+
+<p>
+Add the following at the end of <tt>GameState::SetupStage_Level1()</tt>:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 62 - 71:</p>
+<pre class="code">
+	<disabled/>_xBall = SCREEN_WIDTH / 2;
+	<disabled/>_yBall = 0;
+	<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+	<disabled/>
+<mark type="plus"/>	// Initialize the ball direction.
+<mark type="plus"/>	_dxBall = 1;
+<mark type="plus"/>	_dyBall = 1;
+<mark type="plus"/>
+	<disabled/>// TODO: Add more initialization for level 1 here.
+<disabled/>}
+</pre>
+
+<p>
+and change the ball update code at the end of <tt>GameState::Update_Level1()</tt>
+from:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 121 - 127:</p>
+<pre class="code">
+	// Move the ball.
+	_xBall += 1;
+	_yBall += 1;
+	MoveObjectTo(kObj_Ball, _xBall, _yBall);
+
+	// TODO: Add additional game state updates for level 1 here.
+}
+</pre>
+
+<p>
+to:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 121 - 126:</p>
+<pre class="code">
+	<disabled/>// Move the ball.
+<mark type="arrow"/>	_xBall += _dxBall;
+<mark type="arrow"/>	_yBall += _dyBall;
+	<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+	<disabled/>
+	<disabled/>// TODO: Add additional game state updates for level 1 here.
+<disabled/>}
+</pre>
+
+<h2>Step 20 : Build/Run</h2>
+
+
+<p>
+If you build/run now, it will act the same as before. but now that we're storing
+the direction in a variable, we can change it whenever we want.
+</p>
+
+<h2>Step 21 : Bounce off screen boundaries</h2>
+
+<p>
+Let's make the ball respect the screen boundaries.
+</p>
+
+<p>
+Add the following to <tt>GameState::Update_Level1()</tt>, just
+before the code to move the ball:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 117 - 136:</p>
+<pre class="code">
+		<disabled/>// Move the player to the new location.
+		<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>}
+	<disabled/>
+<mark type="plus"/>	// Check where the ball is moving.
+<mark type="plus"/>	int x = _xBall + _dxBall;
+<mark type="plus"/>	int y = _yBall + _dyBall;
+<mark type="plus"/>
+<mark type="plus"/>	// Don't let the ball go off the left/right side of screen.
+<mark type="plus"/>	if (x &lt; 0 || x &gt; SCREEN_WIDTH - GetObjectWidth(kObj_Ball))
+<mark type="plus"/>		_dxBall *= -1;
+<mark type="plus"/>
+<mark type="plus"/>	// Don't let the ball go off the top/bottom of screen.
+<mark type="plus"/>	if (y &lt; 0 || y &gt; SCREEN_HEIGHT - GetObjectHeight(kObj_Ball))
+<mark type="plus"/>		_dyBall *= -1;
+<mark type="plus"/>
+	<disabled/>// Move the ball.
+	<disabled/>_xBall += _dxBall;
+	<disabled/>_yBall += _dyBall;
+	<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+</pre>
+
+<p>
+The <tt>_dxBall *= -1;</tt> line is interesting. What this does is change <tt>1</tt>
+to <tt>-1</tt> and <tt>-1</tt> to <tt>1</tt>. So if the ball is moving left
+(<i>dxBall = -1</i>), it is changed to move right (<i>dxBall = 1</i>). Similarly, a
+ball moving right (<i>dxBall = 1</i>) is changed to move left (<i>dxBall = -1</i>).
+</p>
+
+<p>
+The <tt>_dyBall *= -1;</tt> does the same thing for the ball moving up/down.
+</p>
+
+<h2>Step 22 : Build/Run</h2>
+
+
+<p>
+If you build/run now, the ball will bounce around the screen, but it will still
+ignore the paddles
+</p>
+
+<p><img src="creating_pong/ss_04.png" /></p>
+
+<h2>Step 23 : Bounce off paddles</h2>
+
+<p>
+Add the following code immediately after the code you just added:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 129 - 142:</p>
+<pre class="code">
+	<disabled/>// Don't let the ball go off the top/bottom of screen.
+	<disabled/>if (y &lt; 0 || y &gt; SCREEN_HEIGHT - GetObjectHeight(kObj_Ball))
+		<disabled/>_dyBall *= -1;
+	<disabled/>
+<mark type="plus"/>	// Does the ball collide with a paddle?
+<mark type="plus"/>	if (CollideBBox(kObj_Player, kObj_Ball))
+<mark type="plus"/>		_dxBall = -1;
+<mark type="plus"/>	if (CollideBBox(kObj_Opponent, kObj_Ball))
+<mark type="plus"/>		_dxBall = 1;
+<mark type="plus"/>
+	<disabled/>// Move the ball.
+	<disabled/>_xBall += _dxBall;
+	<disabled/>_yBall += _dyBall;
+	<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+</pre>
+
+<p>
+This code tells the ball to go left (<tt>_dxBall = -1</tt>) if it collides with
+the player's paddle and to go right (<tt>_dxBall = 1</tt>) if it collides with
+the opponent's paddle. Note that the y-direction is not affected - if the ball is
+going up when it hits a paddle, it will continue to go up after it bounces off.
+</p>
+
+<p>
+However, if we try to build now, we'll get an error:
+</p>
+
+<pre>error: 'CollideBBox' was not declared in this scope</pre>
+
+<p>
+This means that it doesn't know about CollideBBox. We need to tell it where it is defined.
+</p>
+
+<p>
+We do this by adding a reference to "collision.h" at the top of the file:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 7 - 10:</p>
+<pre class="code">
+<mark type="plus"/>#include "collision.h"
+<disabled/>#include "game_state.h"
+<disabled/>#include "game_utils.h"
+<disabled/>#include "object_utils.h"
+</pre>
+
+<h2>Step 24 : Build/Run</h2>
+
+
+<p>
+Now if you build and run, it will successfully compile and the ball will bounce off
+the paddles.
+</p>
+
+<p><img src="creating_pong/ss_05.png" /></p>
+
+<h2>Step 25 : Opponent AI</h2>
+
+<p>
+The opponent paddle is boring. Let's add some <i>really simple</i> AI (<i>Artificial Intelligence</i>)
+to make it play pong.
+</p>
+
+<p>
+At the bottom of the <tt>GameState::Update_Level1()</tt>, just after the code to move the
+ball, add the following:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 140 - 166:</p>
+<pre class="code">
+	<disabled/>// Move the ball.
+	<disabled/>_xBall += _dxBall;
+	<disabled/>_yBall += _dyBall;
+	<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+<mark type="plus"/>
+<mark type="plus"/>	// Handle opponent AI.
+<mark type="plus"/>	dy = 0;
+<mark type="plus"/>	// If the ball is above the paddle.
+<mark type="plus"/>	if (_yBall &lt; _yOpponent) {
+<mark type="plus"/>		// Move the paddle up.
+<mark type="plus"/>		dy = -1;
+<mark type="plus"/>		// Unless that would move the paddle above the top of the screen.
+<mark type="plus"/>		if (_yOpponent &lt; 0)
+<mark type="plus"/>			dy = 0;
+<mark type="plus"/>	} else {
+<mark type="plus"/>		// Otherwise, move the paddle down.
+<mark type="plus"/>		dy = 1;
+<mark type="plus"/>		// Unless that would move the paddle below the bottom of the screen.
+<mark type="plus"/>		if (_yOpponent &gt; SCREEN_HEIGHT - GetObjectHeight(kObj_Opponent))
+<mark type="plus"/>			dy = 0;
+<mark type="plus"/>	}
+<mark type="plus"/>
+<mark type="plus"/>	// Move the paddle.
+<mark type="plus"/>	_yOpponent += dy;
+<mark type="plus"/>	MoveObjectTo(kObj_Opponent, _xOpponent, _yOpponent);
+	<disabled/>
+	<disabled/>// TODO: Add additional game state updates for level 1 here.
+<disabled/>}
+</pre>
+
+<h2>Step 26 : Build/Run</h2>
+
+
+<p>
+Build and run. The opponent's paddle will move up and down tracking the ball.
+</p>
+
+<h2>Finished!</h2>
+
+<p>
+And we're done!
+</p>
+
+<div id="filelink_bkgd"><div id="filelink">
+<h1>Links to completed project</h1>
+<p>GBA:</p>
+<ul>
+<li><a href="creating_pong/gba/game_state.h">game_state.h</a></li>
+<li><a href="creating_pong/gba/game_state.cpp">game_state.cpp</a></li>
+<li><a href="creating_pong/gba/pong.gba">pong.gba</a></li>
+</ul>
+<p>NDS:</p>
+<ul>
+<li><a href="creating_pong/nds/game_state.h">game_state.h</a></li>
+<li><a href="creating_pong/nds/game_state.cpp">game_state.cpp</a></li>
+<li><a href="creating_pong/nds/pong.nds">pong.nds</a></li>
+</ul>
+</div></div>
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2008-9 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

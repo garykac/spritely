@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+   XML Schema Definition (XSD) for the version 2 data files used by Spritely.
+   Author: Gary Kacmarcik
+   Revision History:
+     30 Jan 2009  GJK  Added support for paletted background images
+     04 Jan 2009  GJK  Initial version
+ -->
+
+<xs:schema id="spritely"
+		attributeFormDefault="unqualified"
+		elementFormDefault="qualified"
+		targetNamespace="http://schemas.kacmarcik.com/spritely/2009"
+		xmlns="http://schemas.kacmarcik.com/spritely/2009"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		>
+
+	<!-- Top level element for spritely files. -->
+	<xs:element name="spritely">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="options" minOccurs="1" maxOccurs="1" />
+				<xs:element name="palettes" type="palettes" minOccurs="1" maxOccurs="1" />
+				<xs:element name="spritesets" type="spritesets" minOccurs="1" maxOccurs="1" />
+				<xs:element name="bgpalettes" type="palettes" minOccurs="1" maxOccurs="1" />
+				<xs:element name="bgspritesets" type="spritesets" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="bgmaps" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="bgimages" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:int" use="required" />
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- PROJECT OPTIONS -->
+
+	<xs:element name="options">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="option" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="option">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="value" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- PALETTES -->
+
+	<!-- A set of palettes.
+	     Used by <palettes> and <bgpalettes>. -->
+	<xs:complexType name="palettes">
+		<xs:sequence>
+			<!-- order not important -->
+			<xs:element ref="palette16" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="palette256" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Definition for a palette consisting of 16 16-color subpalettes. -->
+	<xs:element name="palette16">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="subpalette16" minOccurs="16" maxOccurs="16" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="id" type="xs:int"  use="required" />
+			<xs:attribute name="desc" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- Definition for a subpalette with 16-colors. -->
+	<xs:element name="subpalette16">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="color" minOccurs="16" maxOccurs="16" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:int" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- Definition for a palette with 256-colors. -->
+	<xs:element name="palette256">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="color" minOccurs="256" maxOccurs="256" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="id" type="xs:int"  use="required" />
+			<xs:attribute name="desc" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- An rgb color specification with 5 bits (32 values) for each of the
+	     red, green and blue components. -->
+	<xs:element name="color">
+		<xs:complexType>
+			<xs:attribute name="rgb" type="rgb555" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- rgb555: hex rgb encoding, with 5-bits for each values (00-1f), e.g. "1f001f". -->
+	<xs:simpleType name="rgb555">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-1][0-9a-fA-F]){3}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- SPRITES -->
+
+	<!-- A set of sprites.
+	     Used by <spritesets> and <bgspritesets>. -->
+	<xs:complexType name="spritesets">
+		<xs:sequence>
+			<!-- order is not important -->
+			<xs:element ref="spriteset16" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="spriteset256" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- A set of sprites that use 16 16-color palettes. -->
+	<xs:element name="spriteset16">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sprite16" type="sprite16" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="id" type="xs:int"  use="required" />
+			<xs:attribute name="desc" type="xs:string" use="optional" />
+			<xs:attribute name="palette_id" type="xs:int" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- A set of sprites that use a single 256-color palettes. -->
+	<xs:element name="spriteset256">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sprite256" type="sprite256" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="id" type="xs:int"  use="required" />
+			<xs:attribute name="desc" type="xs:string" use="optional" />
+			<xs:attribute name="palette_id" type="xs:int" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- A sprite in a spriteset with 16 16-color subpalettes. -->
+	<xs:complexType name="sprite16">
+		<xs:sequence>
+			<xs:element ref="tile" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="id" type="xs:int"  use="required" />
+		<xs:attribute name="desc" type="xs:string" use="optional" />
+		<xs:attribute name="size" type="sprite_size" use="required" />
+		<xs:attribute name="subpalette_id" type="xs:int"  use="required" />
+	</xs:complexType>
+
+	<!-- A sprite in a spriteset using a 256-color palette. -->
+	<xs:complexType name="sprite256">
+		<xs:sequence>
+			<xs:element ref="tile" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="id" type="xs:int"  use="required" />
+		<xs:attribute name="desc" type="xs:string" use="optional" />
+		<xs:attribute name="size" type="sprite_size" use="required" />
+	</xs:complexType>
+
+	<!-- sprite_size: valid NxM sprite sizes -->
+	<xs:simpleType name="sprite_size">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[124]x[124]" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- TILES -->
+	
+	<!-- A tile that is part of a larger sprite.
+	     Name, desc and subpalette are inherited from sprite. -->
+	<xs:element name="tile">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tilerow" minOccurs="8" maxOccurs="8" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:int"  use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- A single row in a tile definition (8 values). -->
+	<xs:element name="tilerow">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="tilerow_data">
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- tilerow_data: a single row of tile data (8 values). -->
+	<xs:simpleType name="tilerow_data">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(\d+,){7}\d+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- BACKGROUND MAPS -->
+
+	<!-- The set of all maps for this project. -->
+	<xs:element name="bgmaps">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="map16" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- A single map using a palette with 16 16-color subpalettes. -->
+	<xs:element name="map16">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="map16block" minOccurs="1" maxOccurs="4" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="id" type="xs:int"  use="required" />
+			<xs:attribute name="desc" type="xs:string" use="optional" />
+			<xs:attribute name="size" type="map_size" use="required" />
+			<xs:attribute name="bgspriteset_id" type="xs:int" use="required" />
+			<xs:attribute name="default_subpalette_id" type="xs:int" use="optional" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- map_size: valid NxM map sizes -->
+	<xs:simpleType name="map_size">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(32x32)|(32x64)|(64x32)|(64x64)" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- A 32x32 map block. -->
+	<xs:element name="map16block">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="map16row" minOccurs="32" maxOccurs="32" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:int"  use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- A single row in a 32x32 map block. -->
+	<xs:element name="map16row">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="map16tile" minOccurs="32" maxOccurs="32" />
+			</xs:sequence>
+			<xs:attribute name="row" type="xs:int"  use="optional" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- A single tile in a map. -->
+	<xs:element name="map16tile">
+		<xs:complexType>
+			<xs:attribute name="tile_id" type="xs:int"  use="required" />
+			<xs:attribute name="subpalette_id" type="xs:int"  use="optional" />
+			<xs:attribute name="flip" type="maptile_flip"  use="optional" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- maptile_flip: horizontal/vertical flip info -->
+	<xs:simpleType name="maptile_flip">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="h?v?" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- BACKGROUND IMAGES -->
+
+	<!-- The set of all background images for this project. -->
+	<xs:element name="bgimages">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="bgimage_pal8" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- An indexed background image with its palette.
+	     Each pixel is 8bpp, which is the index into the palette. -->
+	<xs:element name="bgimage_pal8">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="palette256" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="bgimagedata" minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="id" type="xs:int"  use="required" />
+			<xs:attribute name="desc" type="xs:string" use="optional" />
+			<xs:attribute name="size" type="image_size" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- image_size: valid NxM map sizes -->
+	<xs:simpleType name="image_size">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d+x\d+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Data for a single background image. -->
+	<xs:element name="bgimagedata">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="bgimagerow" minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:int"  use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- A single row in an image definition. -->
+	<xs:element name="bgimagerow">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="bgimagerow_data">
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- imagerow_data: a single row of image data (palette index values). -->
+	<xs:simpleType name="bgimagerow_data">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9a-fA-F]{2},)*[0-9a-fA-F]{2}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

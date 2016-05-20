@@ -1,0 +1,242 @@
+NAME carts
+TITLE GBA and NDS Cartridges
+PROJECT_NAME none
+CATEGORY Optional Tools
+AUTHOR Copyright &copy;2009 Gary Kacmarcik
+
+<p>
+Hardware cartridges are not necessary to run your programs, but
+it is a lot more fun to run your game on real hardware.
+</p>
+
+<hr/>
+
+<h2>Gameboy Advance compatible cartridges</h2>
+
+<p>
+There are fewer GBA cartridges on the market now than there were a few
+years ago, but the two that are commonly available work perfectly fine
+for homebrew. They each require a miniSD card to store the GBA ROMs
+that you create.
+</p>
+
+<p>
+These cartridges work in GBAs, GBA SPs and in the DS (original) and DS lite
+devices. The DSi does not have a GBA slot, so they do not work with the DSi.
+</p>
+
+<table>
+
+<tr><td align="center" valign="top">
+IMAGE gbamp.png
+</td><td align="center" valign="top">
+IMAGE minisd.png
+</td><td valign="top">
+<p>
+<b>M3</b> + miniSD
+</p>
+<p>
+<a href="http://www.m3adapter.com/">http://www.m3adapter.com</a>
+</p>
+<p>
+Also known as the GBAMP (GBA Movie Player).
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE supercard.png
+</td><td align="center" valign="top">
+IMAGE minisd.png
+</td><td valign="top">
+<p>
+<b>Supercard</b> + miniSD
+</p>
+<p>
+<a href="http://eng.supercard.cn">http://eng.supercard.cn</a>
+</p>
+</td></tr>
+
+</table>
+
+<h2>Nintendo DS compatible cartridges</h2>
+
+<p>
+A large number of DS cartridges are available and they all work fine
+for NDS homebrew. Many require a microSD memory card to store files while
+others have memory built-in.
+</p>
+
+<p>
+Note that many of the older carts are not compatible with the Nintendo DSi.
+Verify compatibility before purchase if you intend to use a cart with a DSi.
+</p>
+
+<table>
+
+<tr><td align="center" valign="top">
+IMAGE acekard2i.png
+</td><td align="center" valign="top">
+IMAGE microsd.png
+</td><td valign="top">
+<p>
+<b>Acekard 2i</b> + microSD
+</p>
+<p>
+<a href="http://www.acekard.com/">http://www.acekard.com/</a>
+</p>
+<p>
+Reviews:
+<a href="http://www.emuboards.com/invision/index.php?showtopic=30812">emuboards.com</a>,
+<a href="http://gbatemp.net/index.php?showtopic=122563">gbatemp.net</a>
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE cyclods.png
+</td><td align="center" valign="top">
+IMAGE microsd.png
+</td><td valign="top">
+<p>
+<b>Cyclo DS Evolution</b> + microSD
+</p>
+<p>
+<a href="http://www.cyclopsds.com/">http://www.cyclopsds.com/</a>
+</p>
+<p>
+Reviews:
+<a href="http://www.emuboards.com/invision/index.php?showtopic=28740">emuboards.com</a>,
+<a href="http://gbatemp.net/index.php?showtopic=53450">gbatemp.net</a>
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE dslinker.png
+</td><td align="center" valign="top">
+</td><td valign="top">
+<p>
+<b>DS Linker</b>
+</p>
+<p>
+<a href="http://www.dslinker.cn/">http://www.dslinker.cn/</a>
+</p>
+<p>
+Reviews:
+<a href="http://gbatemp.net/index.php?showtopic=49614">gbatemp.net</a>
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE dstt.png
+</td><td align="center" valign="top">
+IMAGE microsd.png
+</td><td valign="top">
+<p>
+<b>DSTT</b> + microSD (<i>DSTopToy</i>)
+</p>
+<p>
+<a href="http://www.ndstt.com/en">http://www.ndstt.com/en</a>
+</p>
+<p>
+Reviews:
+<a href="http://www.emuboards.com/invision/index.php?showtopic=29805">emuboards.com</a>,
+<a href="http://www.gbatemp.net/index.php?showtopic=69748">gbatemp.net</a>
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE g6dsreal.png
+</td><td align="center" valign="top">
+</td><td valign="top">
+<p>
+<b>G6 Real</b>
+</p>
+<p>
+<a href="http://www.g6flash.com/">http://www.g6flash.com/</a>
+</p>
+<p>
+Reviews:
+<a href="http://www.emuboards.com/invision/index.php?showtopic=29152">emuboards.com</a>,
+<a href="http://gbatemp.net/index.php?showtopic=49102">gbatemp.net</a>
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE m3dsreal.png
+</td><td align="center" valign="top">
+IMAGE microsd.png
+</td><td valign="top">
+<p>
+<b>M3 Real</b> + microSD
+</p>
+<p>
+<a href="http://www.m3adapter.com/">http://www.m3adapter.com</a>
+</p>
+<p>
+Reviews:
+<a href="http://www.emuboards.com/invision/index.php?showtopic=30748">emuboards.com</a>,
+<a href="http://gbatemp.net/index.php?showtopic=68277">gbatemp.net</a>
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE r4ds.png
+</td><td align="center" valign="top">
+IMAGE microsd.png
+</td><td valign="top">
+<p>
+<b>R4DS</b> (<i>Revolution 4 DS</i>)
+</p>
+<p>
+<a href="http://www.r4ds.cn/">http://www.r4ds.cn/</a>
+</p>
+<p>
+Reviews:
+<a href="http://www.emuboards.com/invision/index.php?showtopic=28116">emuboards.com</a>,
+<a href="http://gbatemp.net/index.php?showtopic=41279">gbatemp.net</a>
+</p>
+</td></tr>
+
+<tr><td align="center" valign="top">
+IMAGE dsone.png
+</td><td align="center" valign="top">
+IMAGE microsd.png
+</td><td valign="top">
+<p>
+<b>Supercard DSOne</b>
+</p>
+<p>
+<a href="http://eng.supercard.cn">http://eng.supercard.cn</a>
+</p>
+<p>
+Reviews:
+<a href="http://www.emuboards.com/invision/index.php?showtopic=28613">emuboards.com</a>,
+<a href="http://gbatemp.net/index.php?showtopic=88932">gbatemp.net</a>
+</p>
+</td></tr>
+
+</table>
+
+<h2>Where to buy</h2>
+
+<p>
+There are a number of online stores that sell these devices:
+</p>
+
+<ul>
+<li><a href="http://www.dealextreme.com">http://www.dealextreme.com</a></li>
+<li><a href="http://www.gamekool.com">http://www.gamekool.com</a></li>
+<li><a href="http://www.gameyeeeah.com/">http://www.gameyeeeah.com/</a></li>
+<li><a href="http://www.kickgaming.com/">http://www.kickgaming.com/</a></li>
+<li><a href="http://www.nxpgame.com/">http://www.nxpgame.com/</a></li>
+</ul>
+
+<p>
+I have not done business with all of these stores, but I have ordered
+from some and the others are ones that seem to have a good reputation
+online.
+</p>
+
+<p>
+In addition, you can also search <a href="http://amazon.com">Amazon</a>
+and <a href="http://www.ebay.com">eBay</a>.
+</p>

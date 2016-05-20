@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Getting Setup on Windows</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Getting Setup on Windows</h1>
+
+<p>
+This document briefly describes how to get your Microsoft Windows computer set
+up to create your own Gameboy Advance (GBA) and Nintendo DS (NDS) programs
+using Spritely and devkitPro.
+</p>
+
+<ul><li>
+<strong>Spritely</strong> is a Windows application that can be used to draw sprites and
+other graphics for the GBA/NDS game that you're creating. It can also generate working
+sample code based on the graphics that you created.
+</li></ul>
+
+<p>
+But Spritely requires a few additional tools to be installed:
+</p>
+
+<ul>
+<li>
+<strong>devkitPro</strong> is a toolchain (compiler, linker, libraries and other tools)
+that takes the source code from Spritely and builds a working "ROM file" that can then
+be run in an emulator or on real hardware.
+</li>
+<li>
+<strong>VisualBoyAdvance</strong> is GBA emulator that allows you to run your newly created
+ROM file on your computer.
+</li>
+</ul>
+
+<h2>General System Requirements</h2>
+
+<p>Windows XP (SP2) or Vista with .NET Framework 2.0 </p>
+
+<p>First of all, make sure you have the latest security patches from
+<a href="http://www.update.microsoft.com/" rel="nofollow">http://www.update.microsoft.com/</a>.
+</p>
+
+<p>If you don't already have the .Net Framework 2.0 installed on your computer, it can also
+be installed from update.microsoft.com. Unlike the security and high-priority patches that
+are selected automatically, the .Net Framework is an optional install that you will need to
+select manually before starting the installation. If you don't see it in the list of updates,
+then you may already have it installed.
+</p>
+
+<p>Alternately, you can download the
+<a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=0856eacb-4362-4b0d-8edd-aab15c5e04f5&amp;displaylang=en" rel="nofollow">Microsoft .NET Framework Version 2.0 Redistributable Package (x86)</a>
+onto your computer and install from this file. After downloading, you will have a 22MB file called
+<tt>dotnetfx.exe</tt> on your computer. Run this .exe to install the .Net Framework.
+</p>
+
+<h2>devkitPro</h2>
+
+<p>
+This is the development toolchain that is used to compile your source code into an
+executable binary. Without this package installed, you will not be able to build
+complete GBA/NDS programs (although you can still draw sprites and backgrounds).
+</p>
+
+<p>
+Homepage: <a href="http://www.devkitpro.org/" rel="nofollow">http://www.devkitpro.org/</a>
+</p>
+
+<p>
+For Windows, there is an installer which will do all of the setup work for you:<br/>
+<ul>
+<li>Download: <a href="http://sourceforge.net/projects/devkitpro/files/Automated%20Installer/">http://sourceforge.net/projects/devkitpro/files/Automated%20Installer/</a></li>
+<li>Direct link: <a href="http://sourceforge.net/projects/devkitpro/files/Automated%20Installer/devkitProUpdater-1.5.0.exe/download" rel="nofollow">http://sourceforge.net/projects/devkitpro/files/Automated%20Installer/devkitProUpdater-1.5.0.exe/download</a></li>
+</ul>
+To use this installer follow these instructions:
+</p>
+
+<ul>
+<li>Download the latest version of the "devkitPro Updater".</li>
+<li>Double-click the "devkitProUpdater-1.5.0.exe" application to start the installation. It will first look for updates. Click "Next &gt;" to begin.</li>
+<li>Select "Download and install/install from downloaded files" and click "Next &gt;".</li>
+<li>Select "Remove downloaded files" and click "Next &gt;". It's OK to keep the downloaded files if you wish, but there's no need for them.</li>
+<li>Do a "Full" install by leaving all the checkboxes checked. Click "Next &gt;".</li>
+<li>The default destination folder is "c:\devkitpro" which is fine. Click "Next &gt;".</li>
+<li>"Choose Start Menu Folder". Whatever. Click "Next &gt;".</li>
+<li>Wait... It will now spend some time installing all of the files.</li>
+<li>Click "Next &gt;" one last time and finally "Finish".</li>
+</ul>
+
+<p>
+When the installation is complete, verify that you have a bunch of new files and directories
+installed in your <tt>c:\devkitpro</tt> directory.
+</p>
+
+<p><strong><i>Optional:</i></strong></p>
+
+<p>
+Now you should verify that your environment variables were set up properly (otherwise
+you won't be able to build). If the installation worked properly, then you will only
+need to verify that these variables were created. But there's a chance they weren't
+created (depending on your system's security settings), so it's a good idea to
+double-check.
+</p>
+
+<ul>
+<li>Open the "Start" menu and select the "Control Panel".</li>
+<li>Double-click the "System" icon. A "System Properties" dialog will appear.</li>
+<li>Select the "Advanced" tab. Near the bottom of this tab will be an "Environment Variables"
+	button. Click it.</li>
+<li>You should see the following variables/values (either in the top "User variables"
+	or bottom "System variables" box):</li>
+<pre class="prettyprint">DEVKITARM = /c/devkitPro/devkitARM
+DEVKITPRO = /c/devkitPro</pre>
+<li>If you don't see those variables, then add them to the "User variables" (at the top)
+	by clicking the "New" button and adding them one at a time. Note that there are a few
+	other DEVKIT variables as well, but the 2 listed above are the only ones that matter.</li>
+</ul>
+
+<ul>
+<li>Finally, make sure that your "Path" environment variable contains <tt>c:\devkitPro\msys\bin</tt>.</li>
+<ul>
+	<li>If you don't have a "Path" variable, then add a new one to the "User variables" that
+	contains this string. </li>
+	<li>If you already have a "Path" variable but it's missing this string, then add the
+	following string at the beginning <tt>c:\devkitPro\msys\bin;</tt> - note the semicolon
+	at the end to separate your new string from the old Path contents. </li>
+</ul>
+</ul>
+
+<h2>VisualBoy Advance</h2>
+
+<p>
+VBA is the most popular GBA emulator. An emulator is a program that runs on a computer and
+pretends to be another device. This will allow us to test out our GBA/NDS programs on our
+development computer.
+</p>
+
+<p>
+Homepage: <a href="http://vba.ngemu.com/" rel="nofollow">http://vba.ngemu.com/</a>
+</p>
+
+<p>
+Download page: <a href="http://sourceforge.net/project/showfiles.php?group_id=63889" rel="nofollow">http://sourceforge.net/project/showfiles.php?group_id=63889</a>
+(Direct link (<a href="http://prdownloads.sourceforge.net/vba/VisualBoyAdvance-1.7.2.zip" rel="nofollow">http://prdownloads.sourceforge.net/vba/VisualBoyAdvance-1.7.2.zip</a> Win32])
+</p>
+
+<p>
+Installing VisualBoy Advance:
+</p>
+
+<ul>
+<li>Create a <tt>c:\gamedev</tt> folder on your drive.</li>
+<li>Go to the download page listed above and download the "VisualBoyAdvance-1.7.2.zip" file
+	to your computer. Save the file in the <tt>c:\gamedev</tt> folder you created.</li>
+<li>Extract the contents of the zip file by right-clicking on the file and selecting
+	"Extract all..."</li>
+<li>You will now have a "VisualBoyAdvance-1.7.2" folder in your <tt>c:\gamedev</tt> folder.</li>
+</ul>
+
+<p>
+You can run VBA by launching <tt>c:\gamedev\VisualBoyAdvance-1.7.2\VisualBoyAdvance.exe</tt>
+</p>
+
+<h2>Spritely</h2>
+
+<p>
+Spritely is a program that allows you to create your own basic sprite and background graphics.
+It was designed to make it easy to create graphics for the GBA and DS and was created especially
+for this programming class.
+</p>
+
+<p>
+Download the latest version of Spritely:
+</p>
+
+<ul>
+<li>Create a <tt>c:\gamedev</tt> folder on your drive if you don't already have one.</li>
+<li>If you already have an earlier version of Spritely, remove it now by deleting
+	the <tt>c:\gamedev\Spritely</tt> folder and all its contents.</li>
+<li>Download the latest version of from the
+	<a href="http://code.google.com/p/spritely/downloads/list" rel="nofollow">download list</a>.
+	Save the file in the <tt>c:\gamedev</tt> folder you created.</li>
+<li>Extract the contents of the zip file by right-clicking on the file and selecting "Extract all..."</li>
+<li>You will now have a "Spritely" folder in your <tt>c:\gamedev</tt> folder.</li>
+</ul>
+
+<p>
+You can run Spritely by launching <tt>c:\gamedev\Spritely\Spritely.exe</tt>
+</p> 
+ 
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2008-9 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

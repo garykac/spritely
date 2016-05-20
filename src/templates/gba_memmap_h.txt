@@ -1,0 +1,61 @@
+// gba_memmap.h
+
+// ======================
+// Overview of GBA Memory
+// ======================
+
+// 0x00000000  +====================+
+//             |     System ROM     |   16K
+// 0x00004000  +--------------------+
+//             |      <unused>      |
+// 0x02000000  +====================+
+//             |    External Work   |   256K
+//             |     RAM (EWRAM)    |
+// 0x02040000  +--------------------+
+//             |      <unused>      |
+// 0x03000000  +====================+
+//             |    Internal Work   |   32K
+//             |     RAM (IWRAM)    |
+// 0x03008000  +--------------------+
+//             |      <unused>      |
+// 0x04000000  +====================+   Registers (REG_BASE) 1K
+//             |    IO Registers    |   Various registers to control I/O operations
+//             |                    |   (see gba_video.h, gba_dma.h, gba_input.h, gba_interrupt.h, gba_sound.h, gba_timers.h)
+// 0x04000400  +--------------------+
+//             |      <unused>      |
+// 0x05000000  +====================+   Palettes (BG_PALETTE & SPRITE_PALETTE) 1K (512b each)
+//             | Background Palette |   Each of these palettes has 256 16-bit entries and is interpreted
+// 0x05000200  +--------------------+   as either a single 256-entry palette of as 16 16-entry palettes.
+//             |   Sprite Palette   |   (see gba_video.h)
+// 0x05000400  +--------------------+
+//             |      <unused>      |
+// 0x06000000  +====================+   Tile Data Blocks (VRAM) 96K
+//             |   Background Tile  |   Background blocks are arranged as 4 16K Background Tile Data Blocks
+//             |     Data Blocks    |   overlapping with 32 2K Background Tile Map Blocks.
+// 0x06010000  +--------------------+   There is a single 32K Sprite Tile Data block which has room for
+//             |  Sprite Tile Data  |   1024 16-color sprites or 512 256-color sprites.
+//             |                    |   (see gba_video.h)
+// 0x06018000  +--------------------+
+//             |      <unused>      |
+// 0x07000000  +====================+   Object Attribute Memory (OAM) 1K
+//             |        OAM         |   Attributes for up to 128 active sprites.
+//             |                    |   (see gba_sprites.h)
+// 0x07000400  +--------------------+
+//             |      <unused>      |
+// 0x08000000  +--------------------+
+
+// ===============
+// Game Pak Memory
+// ===============
+
+// 0x08000000  +--------------------+
+//             |        ROM         |   0-32M
+// 0x0a000000  +--------------------+
+//             |    ROM Image 1     |   0-32M
+// 0x0c000000  +--------------------+
+//             |    ROM Image 2     |   0-32M
+// 0x0e000000  +--------------------+
+//             |        RAM         |   0-64K
+// 0x0e010000  +--------------------+
+//             |      <unused>      |
+// 0x10000000  +--------------------+

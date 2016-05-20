@@ -1,0 +1,45 @@
+/* CSS settings for precodeformat.js
+ * http://code.google.com/p/precodeformat/
+ */
+
+pre.code {
+	margin-left: 10px;
+	margin-right: 10px;
+	line-height: 130%;
+	/* 1.1em looks good on Firefox & Safari, too big on IE7
+	 * 0.9em looks good on IE7, too small on FF and Safari
+	 * 11pt looks good on all browsers.
+	 */
+	font-size: 11pt;
+	padding: 10px;
+	border: 1px solid #808080;
+}
+
+.string { color: #a00000; }
+.comment { color: #009900; }
+.keyword { color: #600090; }
+.variable { color: #000090; }
+.function { color: #008080; }
+.disabled { color: #707070; }
+
+.startline {
+	padding: 0;
+	padding-left: 25px;
+}
+
+/* These are the valid mark types.
+ * To use them, add <mark type="arrow"/> at the beginning of the
+ * line that you want marked.
+ */
+.arrow {
+	background:url(arrow.png) 0 50% no-repeat;
+}
+.cross {
+	background:url(cross.png) 0 50% no-repeat;
+}
+.plus {
+	background:url(plus.png) 0 50% no-repeat;
+}
+.star {
+	background:url(star.png) 0 50% no-repeat;
+}

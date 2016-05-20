@@ -1,0 +1,270 @@
+// gba_vram.h
+
+// =========================
+// Overview of GBA Video RAM
+// =========================
+
+// The GBA video RAM (VRAM) is 96K of memory that is used to store the
+// images being displayed on the screen. The GBA LCD screen is 240x160
+// pixels.
+//
+// How this area of memory is used depends on the display mode.
+//
+// There are 6 display modes, numbered 0-5.
+//   Modes 0,1,2 are tiled modes.
+//   Modes 3,4,5 are bitmap modes.
+//
+// Each mode allows different types of background layers and may 
+// restrict the number of tiles available for sprites.
+// There are 2 types of background layers:
+//   'text' backgrounds are simple tiled backgrounds that don't
+//      support rotation or scaling. 4-bit or 8-bit palette
+//      entries may be used.
+//   'rotation' backgrounds are tiled backgrounds that can be
+//      rotated or scaled. Only 8-bit palette entries may be used.
+//
+// Mode 0:
+//   Four text background layers:0,1,2,3 (No rotation/scaling).
+//   4-bit or 8-bit paletted
+//   1024 sprite tiles available
+//
+// Mode 1:
+//   Two text background layers: 0,1. One rotation background: 2.
+//   1024 sprite tiles available
+//
+// Mode 2:
+//   Two rotation background layers: 2,3.
+//   1024 sprite tiles available
+//
+// Mode 3:
+//   240x160. 16-bit per pixel bitmap mode.
+//   RGB555 (5-bits for each R,G and B value) stored for each pixel.
+//   May be rotated, scaled by adjusting layer 2.
+//   512 sprite tiles available.
+//
+// Mode 4:
+//   240x160. 8-bit per pixel bitmap mode.
+//   8-bit palette index stored for each pixel.
+//   Two frame buffers allow page flipping.
+//   May be rotated, scaled by adjusting layer 2.
+//   512 sprite tiles available.
+//
+// Mode 5:
+//   160x128. 16-bit per pixel bitmap mode.
+//   RGB555 (5-bits for each R,G and B value) stored for each pixel.
+//   Two frame buffers allow page flipping.
+//   Background may be rotated, scaled by adjusting layer 2.
+//   Screen image is at upper-left corner of LCD.
+//   512 sprite tiles available.
+//
+// Memory for each of these modes is allocated as follows:
+//
+// Mode 0,1,2:
+//   0x05000000 - 0x050001ff (512) : Background palette
+//   0x06000000 - 0x0600ffff (64K) : Background tile data and tile map
+//   0x06010000 - 0x06017fff (32K) : Sprite tile data (1024 sprite entries)
+// Mode 3:
+//   0x05000000 - 0x050001ff (512) : unused
+//   0x06000000 - 0x06012bff (75K) Front Buffer - 240x160, 16bpp
+//   0x06014000 - 0x06017fff (16K) Sprite tile data (Upper 512 sprite entries)
+// Mode 4:
+//   0x05000000 - 0x050001ff (512) : Background palette
+//   0x06000000 - 0x060095ff (37.5K) Front Buffer - 240x160, 8bpp indexed
+//   0x0600a000 - 0x060135ff (37.5K) Back Buffer - 240x160, 8bpp indexed
+//   0x06014000 - 0x06017fff (16K) Sprite tile data (Upper 512 sprite entries)
+// Mode 5:
+//   0x05000000 - 0x050001ff (512) : unused
+//   0x06000000 - 0x0600a000 (40K) Front Buffer - 160x128, 16bpp
+//   0x0600a000 - 0x06013fff (40K) Back Buffer - 160x128, 16bpp
+//   0x06014000 - 0x06017fff (16K) Sprite tile data (Upper 512 sprite entries)
+//
+//                   0,1,2                  3                    4                    5
+// 0x06000000  +----------------+   +----------------+   +----------------+   +----------------+
+//             |   Background   |   |   Background   |   |   Background   |   |   Background   |
+//             |   Tile Data    |   |  Front Buffer  |   |  Front Buffer  |   |  Front Buffer  |
+//             |       &        |   |    240x160     |   |    240x160     |   |    160x128     |
+//             |    Tile Map    |   |     16bpp      |   |      8bpp      |   |     16bpp      |
+//             |                |   |                |   |                |   |                |
+//             |                |   |                |   |                |   |                |
+// 0x06009600  |                |   |                |   +----------------+   |                |
+//             |                |   |                |   |     unused     |   |                |
+// 0x0600a000  |                |   |                |   +----------------+   +----------------+
+//             |                |   |                |   |   Background   |   |   Background   |
+//             |                |   |                |   |  Back Buffer   |   |  Back Buffer   |
+// 0x06010000  +----------------+   |                |   |    240x160     |   |    160x128     |
+//             |     Sprite     |   |                |   |      8bpp      |   |     16bpp      |
+//             |   Tile Data    |   |                |   |                |   |                |
+// 0x06012c00  |    (0-1023)    |   +----------------+   |                |   |                |
+// 0x06013600  |                |   |     unused     |   +----------------+   |                |
+//             |                |   |                |   |     unused     |   |                |
+// 0x06014000  |                |   +----------------+   +----------------+   +----------------+
+//             |                |   |     Sprite     |   |     Sprite     |   |     Sprite     |
+//             |                |   |   Tile Data    |   |   Tile Data    |   |   Tile Data    |
+//             |                |   |   (512-1023)   |   |   (512-1023)   |   |   (512-1023)   |
+//             |                |   |                |   |                |   |                |
+//             |                |   |                |   |                |   |                |
+// 0x06018000  +----------------+   +----------------+   +----------------+   +----------------+
+//
+// Note that modes 3,4,5 extend past 0x0601000 into the sprite tile data.
+// If you are using modes 3-5, you cannot use the first 512 sprite tiles.
+
+//
+//
+
+
+// ==========
+// Mode 0,1,2
+// ==========
+
+// Background data
+
+#define	BGTileDataBlock(n)	(0x06000000 + ((n)* 0x4000))
+#define CharBaseBlock		BGTileDataBlock
+#define	TDB					BGTileDataBlock
+
+#define BGTileMapBlock(n)	(0x06000000 + ((n)* 0x0800))
+#define ScreenBaseBlock		BGTileMapBlock
+#define	TMB					BGTileMapBlock
+
+// The Tile Data Block (aka: CharBaseBlock) is where the background
+// tile data is stored. There are 4 16K blocks to choose from.
+//
+// The Tile Map Block (aka: ScreenBaseBlock) is where the background
+// tile map is stored. There are 32 2K blocks to choose from.
+//
+// Note that these Block ranges overlap in memory, so you need to choose
+// TDBs and TMBs that do not overlap or else your map and tile data will
+// overwrite each other. A safe default is to use TDB(0) and TMB(31). This
+// reserves room for 1 32x32 map while maximizing the space for bg tiles.
+// If you have a larger map use TMB(28), although this will slightly reduce
+// the number of tiles available if you're using 256-color tiles.
+//
+//                   Background               Background
+//                Tile Data Block           Tile Map Block
+// 0x06000000  +--------------------+   +--------------------+
+//             |    TDB 0 (16K)     |   |     TMB 0 (2K)     |
+// 0x06000800  |                    |   +--------------------+
+//             |                    |   |     TMB 1 (2K)     |
+// 0x06001000  |                    |   +--------------------+
+//             |                    |   |     TMB 2 (2K)     |
+// 0x06001800  |                    |   +--------------------+
+//             |                    |   |     TMB 3 (2K)     |
+// 0x06002000  |                    |   +--------------------+
+//             |                    |   |     TMB 4 (2K)     |
+// 0x06002800  |                    |   +--------------------+
+//             |                    |   |     TMB 5 (2K)     |
+// 0x06003000  |                    |   +--------------------+
+//             |                    |   |     TMB 6 (2K)     |
+// 0x06003800  |                    |   +--------------------+
+//             |                    |   |     TMB 7 (2K)     |
+// 0x06004000  +--------------------+   +--------------------+
+//             |    TDB 1 (16K)     |   |     TMB 8 (2K)     |
+// 0x06004800  |                    |   +--------------------+
+//             |                    |   |     TMB 9 (2K)     |
+// 0x06005000  |                    |   +--------------------+
+//             |                    |   |    TMB 10 (2K)     |
+// 0x06005800  |                    |   +--------------------+
+//             |                    |   |    TMB 11 (2K)     |
+// 0x06006000  |                    |   +--------------------+
+//             |                    |   |    TMB 12 (2K)     |
+// 0x06006800  |                    |   +--------------------+
+//             |                    |   |    TMB 13 (2K)     |
+// 0x06007000  |                    |   +--------------------+
+//             |                    |   |    TMB 14 (2K)     |
+// 0x06007800  |                    |   +--------------------+
+//             |                    |   |    TMB 15 (2K)     |
+// 0x06008000  +--------------------+   +--------------------+
+//             |    TDB 2 (16K)     |   |    TMB 16 (2K)     |
+// 0x06008800  |                    |   +--------------------+
+//             |                    |   |    TMB 17 (2K)     |
+// 0x06009000  |                    |   +--------------------+
+//             |                    |   |    TMB 18 (2K)     |
+// 0x06009800  |                    |   +--------------------+
+//             |                    |   |    TMB 19 (2K)     |
+// 0x0600a000  |                    |   +--------------------+
+//             |                    |   |    TMB 20 (2K)     |
+// 0x0600a800  |                    |   +--------------------+
+//             |                    |   |    TMB 21 (2K)     |
+// 0x0600b000  |                    |   +--------------------+
+//             |                    |   |    TMB 22 (2K)     |
+// 0x0600b800  |                    |   +--------------------+
+//             |                    |   |    TMB 23 (2K)     |
+// 0x0600c000  +--------------------+   +--------------------+
+//             |    TDB 3 (16K)     |   |    TMB 24 (2K)     |
+// 0x0600c800  |                    |   +--------------------+
+//             |                    |   |    TMB 25 (2K)     |
+// 0x0600d000  |                    |   +--------------------+
+//             |                    |   |    TMB 26 (2K)     |
+// 0x0600d800  |                    |   +--------------------+
+//             |                    |   |    TMB 27 (2K)     |
+// 0x0600e000  |                    |   +--------------------+
+//             |                    |   |    TMB 28 (2K)     |
+// 0x0600e800  |                    |   +--------------------+
+//             |                    |   |    TMB 29 (2K)     |
+// 0x0600f000  |                    |   +--------------------+
+//             |                    |   |    TMB 30 (2K)     |
+// 0x0600f800  |                    |   +--------------------+
+//             |                    |   |    TMB 31 (2K)     |
+// 0x06010000  +--------------------+   +--------------------+
+
+// The TDB contains the bg tile data
+// Depending on how many bg tiles you have, you may need to use
+// more than one 16K block.
+//
+// for BG_COLOR16:
+//  each tile pixel require 4-bits to encode the subpalette index,
+//  so each tile requires 32 bytes.
+// for BG_COLOR256:
+//  each tile pixel require 8-bits to encode the palette index,
+//  so each tile requires 64 bytes.
+//
+// Max number of tiles:
+// Text backgrounds
+//  Max 1024 bg tiles.
+//  16-color:
+//   1024 16-color bg tiles = 32K = 2 16K data blocks.
+//  256-color:
+//   1024 256-color bg tiles = 64K = all 4 16K data blocks
+//     (which leaves no room for the background map data).
+//   Pratical max is 64K-2K (for map) = 62K of tiles = 992 tiles
+// Rotation backgrounds
+//  Max 256 bg tiles (only 256-color).
+
+// The TMBs contain tile map data, arranged as follows:
+//
+// for text backgrounds:
+//  15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+// |      PAL      | V | H |                 TILE                  |
+// +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+//   0-9: TILE - tile id
+//    10: H - horizontal flip
+//    11: V - vertical flip
+// 12-15: PAL - palette index
+//        used only for BG_COLOR16 backgrounds
+//
+// Text background maps can be:
+//  32x32 tiles (256x256 pixels) = 2K = 1 TMB
+//  64x32 tiles (512x256 pixels) = 4K = 2 TMB
+//  32x64 tiles (256x512 pixels) = 4K = 2 TMB
+//  64x64 tiles (512x512 pixels) = 8K = 4 TMB
+//
+// for rotation backgrounds:
+//   7   6   5   4   3   2   1   0
+// +---+---+---+---+---+---+---+---+
+// |             TILE              |
+// +---+---+---+---+---+---+---+---+
+//   0-7: TILE - tile id
+
+
+// Object/sprite tile data
+
+#define OAM_Data		((u16*)0x6010000)
+#define OAMData			OAM_Data
+#define	ObjTileData		OAM_Data
+
+// 0x06010000  +--------------------+
+//             |  Sprite Tile Data  |
+// 0x06018000  +--------------------+
+//             |     <unused>       |
+// 0x07000000  +--------------------+

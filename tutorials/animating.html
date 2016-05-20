@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Animating the player</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Animating the player</h1>
+
+<p>
+This tutorial will describe how to animate your player object.
+</p>
+
+<p class="alert">
+This tutorial has been tested with
+<a href="http://www.devkitpro.org">devkitARM release 26</a>
+and <a href="http://code.google.com/p/spritely">Spritely version 0.19.20 beta</a>
+and verified to work for both GBA and NDS projects.
+</p>
+
+<h2>Step 1 : Draw your animation frames</h2>
+
+<p>
+First, you'll need to draw the frames of your animation.
+</p>
+
+<p>
+Go to Spritely and draw a few frames of animation &mdash; you
+need at least 2 frames, but you can add as many as you like.
+When creating your sprites, you may want to make use of the 
+"Sprite::Duplicate" menu item.
+</p>
+
+<p><img src="animating/menu_duplicate.png" /></p>
+
+<p>
+Make sure that your sprites are arranged in Spritely
+<b>in order</b>. If they are not in order, then they will not
+animate correctly.
+</p>
+
+
+
+
+<p><img src="animating/sprites_small.png" /></p>
+
+<h2>Step 2 : Name each animation frame</h2>
+
+<p>
+After you've created your new sprites. You now need to give each of your sprites a 
+unique name.
+Since these sprites are all part of the same animation, you should probably give them 
+names that are related.
+</p>
+
+<p>
+For example, if you have 3 sprites in your animation you can name them:
+</p>
+
+<pre>
+&nbsp;&nbsp;&nbsp;Player_first
+&nbsp;&nbsp;&nbsp;Player_X
+&nbsp;&nbsp;&nbsp;Player_last
+</pre>
+
+<p>
+or
+</p>
+
+<pre>
+&nbsp;&nbsp;&nbsp;Player_0
+&nbsp;&nbsp;&nbsp;Player_1
+&nbsp;&nbsp;&nbsp;Player_2
+</pre>
+
+<p>
+or whatever other naming scheme you prefer. The important thing is
+that you give them all unique names and that you remember the name
+of the first and last sprite.
+</p>
+
+<p>
+Because we have bats, in this example we'll be using <tt>Bat0</tt> and <tt>Bat1</tt>.
+</p>
+
+<p><img src="animating/bat0_name.png" /></p>
+
+<p><img src="animating/bat1_name.png" /></p>
+
+<h2>Step 3 : Export</h2>
+
+<p>
+Export your project and open the project file so that we can edit code..
+</p>
+
+
+<h2>Step 4 : Add variables to keep track of animation</h2>
+
+<p>
+Now that we've created the sprites, we need to make use of them.
+</p>
+
+<p>
+Open up <tt>game_state.h</tt> and find:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 35 - 41:</p>
+<pre class="code">
+private:
+	// The current level of the game.
+	int _level;
+
+	// The (x,y) location of the object representing the player.
+	int _xPlayer, _yPlayer;
+};
+</pre>
+
+<p>
+This code declares the variables in the <tt>GameState</tt> class that
+are used to keep track of what's going on in the game.
+</p>
+
+<p>
+By default, <tt>GameState</tt> has only 3 variables:
+the current level in the game (default = level 1),
+and the x- and y-position of the player (to keep track of
+the player's current position on the screen).
+</p>
+
+<p>
+If we want to keep animate the player, then we'll need to add new
+variables that will keep track of the current state of the animation
+(for example, which frame we are currently showing on 
+the screen).
+</p>
+
+<p>
+Modify <tt>GameState</tt> to look like the following:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 35 - 44:</p>
+<pre class="code">
+<disabled/>private:
+	<disabled/>// The current level of the game.
+	<disabled/>int _level;
+	<disabled/>
+	<disabled/>// The (x,y) location of the object representing the player.
+	<disabled/>int _xPlayer, _yPlayer;
+<mark type="plus"/>	
+<mark type="plus"/>	// Keep track of the current animation state of the player.
+<mark type="plus"/>	AnimationInfo animatePlayer;
+<disabled/>};
+</pre>
+
+<p>
+This adds a declation for an <tt>AnimationInfo</tt> structure that
+will hold all of the animation information for the player.
+</p>
+
+<p>
+If you try to compile now, you'll get the following error:
+</p>
+
+<pre class="code">
+game_state.h:43: error: 'AnimationInfo' does not name a type
+</pre>
+
+<p>
+This is because the <tt>AnimationInfo</tt> structure is defined in
+<tt>animation.h</tt>. To fix this problem, we need to 
+include a reference to this file at the top of <tt>game_state.h</tt>. 
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 8 - 10:</p>
+<pre class="code">
+<mark type="plus"/>#include "animation.h"
+<disabled/>#include "sprites.h"
+<disabled/>#include "background_maps.h"
+</pre>
+
+<h2>Step 5 : Initialize animation</h2>
+
+<p>
+Now that we've allocated space to store the animation info, we need
+to initialize it.
+</p>
+
+<p>
+In <tt>game_state.cpp</tt> and find:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 56:</p>
+<pre class="code">
+	// Initialize the objects for the first level.
+	InitObject(kObj_Player, 0);
+
+	// Set the initial location of each object.
+	_xPlayer = 0;
+	_yPlayer = 0;
+	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+
+	// TODO: Add more initialization for level 1 here.
+</pre>
+
+<p>
+And add/change the following lines:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 60:</p>
+<pre class="code">
+	<disabled/>// Initialize the objects for the first level.
+<mark type="arrow"/>	InitObject(kObj_Player, kSprites_Bat0);
+	<disabled/>
+	<disabled/>// Set the initial location of each object.
+	<disabled/>_xPlayer = 0;
+	<disabled/>_yPlayer = 0;
+	<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>
+<mark type="plus"/>	// Initialize the animation for the player object.
+<mark type="plus"/>	InitAnimation(&amp;animatePlayer, kObj_Player,
+<mark type="plus"/>					kSprites_Bat0, kSprites_Bat1, 10);
+<mark type="plus"/>	
+	<disabled/>// TODO: Add more initialization for level 1 here.
+</pre>
+
+<p>
+This adds sets up the animation for the <tt>kObj_Player</tt> object.
+<tt>kSprites_Bat0</tt> and <tt>kSprites_Bat1</tt> should be
+replaced by the name that you chose for your first and last sprite.
+</p>
+
+<p>
+The last value, <tt>10</tt>, controls how fast your object will
+animate &mdash; that is, how long it should wait before advancing
+to the next frame of your animation.  Making this number larger will
+slow down the animation; making it smaller will speed up the animation.
+Since each frame is 1/60th of
+a second, setting this to 10 means that the animation frame will change
+6 times per second.
+</p>
+
+<h2>Step 6 : Build</h2>
+
+
+<p>
+Build the project to make sure we don't have any errors. You won't see any
+changes yet because we need to add code to continuously update the 
+animation.
+</p>
+
+<h2>Step 7 : Update animation</h2>
+
+<p>
+Now that you've initialized your animation, you need to update the animation.
+</p>
+
+<p>
+At the bottom of <tt>game_state.cpp</tt>, find the code that moves the
+player:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 98 - 109:</p>
+<pre class="code">
+	// If we need to move the player.
+	if (dx != 0 || dy != 0) {
+		// Record the player's new location.
+		_xPlayer += dx;
+		_yPlayer += dy;
+
+		// Move the player to the new location.
+		MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	}
+
+	// TODO: Add additional game state updates for level 1 here.
+}
+</pre>
+
+<p>
+and add the following line right before the <tt>TODO</tt> comment:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 98 - 110:</p>
+<pre class="code">
+	<disabled/>// If we need to move the player.
+	<disabled/>if (dx != 0 || dy != 0) {
+		<disabled/>// Record the player's new location.
+		<disabled/>_xPlayer += dx;
+		<disabled/>_yPlayer += dy;
+	<disabled/>
+		<disabled/>// Move the player to the new location.
+		<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>}
+	<disabled/>
+<mark type="plus"/>	UpdateAnimation(&amp;animatePlayer);
+<mark type="plus"/>
+	<disabled/>// TODO: Add additional game state updates for level 1 here.
+<disabled/>}
+</pre>
+
+<h2>Step 8 : Build/Run</h2>
+
+<p>
+If you build and run your project now, you'll have an animated player object.
+</p>
+
+
+<p><img src="animating/ss_bat.png" /></p>
+
+<h2>Finished!</h2>
+
+<p>
+We're done.
+</p>
+
+<div id="filelink_bkgd"><div id="filelink">
+<h1>Links to completed project</h1>
+<p>GBA:</p>
+<ul>
+<li><a href="animating/gba/game_state.h">game_state.h</a></li>
+<li><a href="animating/gba/game_state.cpp">game_state.cpp</a></li>
+<li><a href="animating/gba/animate.gba">animate.gba</a></li>
+</ul>
+<p>NDS:</p>
+<ul>
+<li><a href="animating/nds/game_state.h">game_state.h</a></li>
+<li><a href="animating/nds/game_state.cpp">game_state.cpp</a></li>
+<li><a href="animating/nds/animate.nds">animate.nds</a></li>
+</ul>
+</div></div>
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2008-9 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

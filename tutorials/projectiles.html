@@ -1,0 +1,764 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Adding a projectile</title>
+<link href="css/tutorial.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="css/precodeformat.js"></script>
+</head>
+
+<body onload="PreCodeFormat()">
+<div id="content">
+<h1>Adding a projectile</h1>
+
+<p>
+This tutorial will show you how to add a projectile that fires off when
+you press the "A" button.
+</p>
+
+<p class="alert">
+This tutorial has been tested with
+<a href="http://www.devkitpro.org">devkitARM release 26</a>
+and <a href="http://code.google.com/p/spritely">Spritely version 0.19.20 beta</a>
+and verified to work for both GBA and NDS projects.
+</p>
+
+<h2>Step 1 : Create player sprite</h2>
+
+<p>
+As always, we first need a sprite for the player. This is the object
+that will be throwing (or dropping) the projectile.
+</p>
+
+<p>
+For this tutorial, we'll be using a simple bat player. After you finish
+adding projectiles, you can go to the
+<a href="animating.html">Animating</a>
+tutorial and make it more interesting. But for now, we'll stick with a
+simple un-animated player.
+</p>
+
+
+<p><img src="projectiles/player.png" /></p>
+
+<p>
+Name the player sprite "Player":
+</p>
+
+<p><img src="projectiles/player_name.png" /></p>
+
+<h2>Step 2 : Create the projectile</h2>
+
+<p>
+Now we need to create the projectile that will be thrown by the player.
+Typically, projectiles are much smaller than the player so we will
+draw a small 1x1 ball.
+</p>
+
+
+<p><img src="projectiles/ball.png" /></p>
+
+<p>
+Name the projectile sprite "Ball":
+</p>
+
+<p><img src="projectiles/ball_name.png" /></p>
+
+<h2>Step 3 : Export</h2>
+
+
+<p>
+Export your project and open your project file so that you can start
+editing the source code.
+</p>
+
+<p>
+If you build/run now, you will see only one of your sprites on the screen - 
+either the player or the ball (whichever one occurs first in the spritelist).
+</p>
+
+
+<h2>Step 4 : Define the projectile object</h2>
+
+<p>
+Everything that is displayed on the GBA/NDS screen needs to be
+defined as an object, so let's set up the projectile as an object.
+This process is exactly the same as what you did in the
+<a href="second_object.html">Adding a second object</a>
+tutorial (except for the names of the objects).
+</p>
+
+<p>
+Find the following code in <tt>game_state.h</tt>:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 14 - 16:</p>
+<pre class="code">
+// The objects in our game.
+// Only 128 objects (0-127) can be defined at any time.
+const int kObj_Player = 0;
+</pre>
+
+<p>
+...and add a definition for the projectile object.
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 14 - 17:</p>
+<pre class="code">
+<disabled/>// The objects in our game.
+<disabled/>// Only 128 objects (0-127) can be defined at any time.
+<disabled/>const int kObj_Player = 0;
+<mark type="plus"/>const int kObj_Ball = 1;
+</pre>
+
+<p>
+So, now we have two objects defined: the player object <tt>kObj_Player</tt>
+and the projectile object <tt>kObj_Ball</tt>.
+</p>
+
+<h2>Step 5 : Initialize our objects</h2>
+
+<p>
+Now that we've defined our 2 objects, we need to initialize them so that they
+appear on the screen when/where we want them.
+</p>
+
+<p>
+Open up <tt>game_state.cpp</tt>.
+Scroll down until you find the following lines: 
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 54:</p>
+<pre class="code">
+	// Initialize the objects for the first level.
+	InitObject(kObj_Player, 0);
+
+	// Set the initial location of each object.
+	_xPlayer = 0;
+	_yPlayer = 0;
+	MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+</pre>
+
+</p>
+This is the code that initializes the player object. It specifies which sprite
+to use for the object and where to place it on the screen. By default, it
+uses the first sprite (sprite #0) and places the sprite at (0,0) on the
+screen.
+</p>
+
+<p>
+First, let's make it use the correct sprite for the player. Change the code
+to:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 54:</p>
+<pre class="code">
+	<disabled/>// Initialize the objects for the first level.
+<mark type="arrow"/>	InitObject(kObj_Player, kSprites_Player);
+	<disabled/>
+	<disabled/>// Set the initial location of each object.
+	<disabled/>_xPlayer = 0;
+	<disabled/>_yPlayer = 0;
+	<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+</pre>
+
+<p>
+This tells the player object to use the player sprite.
+</p>
+
+<p>
+To initialize the projectile, we need to add a call to <tt>InitObject</tt>
+and we need to move the projectile to a starting position:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 58:</p>
+<pre class="code">
+	<disabled/>// Initialize the objects for the first level.
+	<disabled/>InitObject(kObj_Player, kSprites_Player);
+<mark type="plus"/>	InitObject(kObj_Ball, kSprites_Ball);
+	<disabled/>
+	<disabled/>// Set the initial location of each object.
+	<disabled/>_xPlayer = 0;
+	<disabled/>_yPlayer = 0;
+	<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+<mark type="plus"/>	
+<mark type="plus"/>	// Initialize the projectile.
+<mark type="plus"/>	MoveObjectTo(kObj_Ball, 0, 0);
+</pre>
+
+<h2>Step 6 : Build/Run</h2>
+
+<p>
+Compile and run your code and you should have a player that can move
+around and a projectile object stuck in 
+the upper left corner of the screen.
+</p>
+
+
+<p><img src="projectiles/ss_01.png" /></p>
+
+<h2>Step 7 : Hide the projectile</h2>
+
+<p>
+This isn't quite what we want. We'd like the projectile to be hidden until
+we press the "A" button.
+</p>
+
+<p>
+To do this, we'll add some code so that the projectile starts out hidden.
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 48 - 59:</p>
+<pre class="code">
+	<disabled/>// Initialize the objects for the first level.
+	<disabled/>InitObject(kObj_Player, kSprites_Player);
+	<disabled/>InitObject(kObj_Ball, kSprites_Ball);
+<mark type="plus"/>	ShowObject(kObj_Ball, false);
+	<disabled/>
+	<disabled/>// Set the initial location of each object.
+	<disabled/>_xPlayer = 0;
+	<disabled/>_yPlayer = 0;
+	<disabled/>MoveObjectTo(kObj_Player, _xPlayer, _yPlayer);
+	<disabled/>
+	<disabled/>// Initialize the projectile.
+	<disabled/>MoveObjectTo(kObj_Ball, 0, 0);
+</pre>
+
+<p>
+To have the projectile appear when the "A" button is pressed, we need to
+make a change to the <tt>Update</tt> routine so that it shows
+the projectile object. Find the following code:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 92 - 97:</p>
+<pre class="code">
+	// Handle the player pressing the 'A' button.
+	// We use CheckKeyPress() because we *don't* want the action to repeat
+	// unless the player presses the 'A' button multiple times.
+	if (CheckKeyPress(KEY_A)) {
+		// ToDo: Add code to respond to 'A' button press here.
+	}
+</pre>
+
+<p>
+... and add:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 92 - 98:</p>
+<pre class="code">
+	<disabled/>// Handle the player pressing the 'A' button.
+	<disabled/>// We use CheckKeyPress() because we *don't* want the action to repeat
+	<disabled/>// unless the player presses the 'A' button multiple times.
+	<disabled/>if (CheckKeyPress(KEY_A)) {
+		<disabled/>// ToDo: Add code to respond to 'A' button press here.
+<mark type="plus"/>		ShowObject(kObj_Ball, true);
+	<disabled/>}
+</pre>
+
+<h2>Step 8 : Build/Run</h2>
+
+<p>
+Build and run now and the projectile is hidden until you press the "A"
+button.
+</p>
+
+<p>
+But it's still stuck in the upper left corner of the screen. Also,
+pressing "A" multiple times has no effect (once the projectile is shown,
+it stays there forever).
+</p>
+
+
+<h2>Step 9 : Set the projectile's initial location</h2>
+
+<p>
+When the player presses the "A" button, they expect the projectile to
+start from the current location of the player.
+</p>
+
+<p>
+We can make this happen by setting the projectile location to be
+equal to the player's current location.
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 92 - 99:</p>
+<pre class="code">
+	<disabled/>// Handle the player pressing the 'A' button.
+	<disabled/>// We use CheckKeyPress() because we *don't* want the action to repeat
+	<disabled/>// unless the player presses the 'A' button multiple times.
+	<disabled/>if (CheckKeyPress(KEY_A)) {
+		<disabled/>// ToDo: Add code to respond to 'A' button press here.
+<mark type="plus"/>		MoveObjectTo(kObj_Ball, _xPlayer, _yPlayer);
+		<disabled/>ShowObject(kObj_Ball, true);
+	<disabled/>}
+</pre>
+
+<p>
+Since we only set the projectile location when the "A" button is pressed,
+the projectile will stay in its new location even if the player moves away.
+</p>
+
+<h2>Step 10 : Build/Run</h2>
+
+<p>
+Build/run and now the projectile will jump to the player's current
+location whenever you press the "A" button.
+</p>
+
+
+<h2>Step 11 : Adjust the projectile's initial location</h2>
+
+<p>
+While the projectile moves to the player's position when we press
+the "A" button, it's not exactly in the right spot. When we copy the
+projectile's position from the player's position, they are
+drawn on the screen as follows:
+</p>
+
+<p><img src="projectiles/player_ball.png" /></p>
+
+<p>
+Which, in this example, makes it look like the ball is coming out of
+the bat's right wing - not the effect we wanted.
+</p>
+
+<p>
+What we really want is for the ball to appear centered under the player
+sprite:
+</p>
+
+<p><img src="projectiles/player_ball_offset.png" /></p>
+
+<p>
+To do that, we need to adjust the ball's starting position by 12 pixels
+in the x-direction (horizontally) and 5 pixels in the y-direction\
+(vertically).
+If you created your own sprite or if you want the projectile to go a 
+different direction (left, right or up), then you'll need to figure 
+out the x- and y-offsets that look good for your sprites.
+</p>
+
+<p>
+Once we've determined the correct x- and y-offsets, we can modify the 
+code to include the offsets when we move the projectile to its starting
+position:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 92 - 99:</p>
+<pre class="code">
+	<disabled/>// Handle the player pressing the 'A' button.
+	<disabled/>// We use CheckKeyPress() because we *don't* want the action to repeat
+	<disabled/>// unless the player presses the 'A' button multiple times.
+	<disabled/>if (CheckKeyPress(KEY_A)) {
+		<disabled/>// ToDo: Add code to respond to 'A' button press here.
+<mark type="arrow"/>		MoveObjectTo(kObj_Ball, _xPlayer + 12, _yPlayer + 5);
+		<disabled/>ShowObject(kObj_Ball, true);
+	<disabled/>}
+</pre>
+
+<h2>Step 12 : Build/Run</h2>
+
+<p>
+Build/run and the ball appears centered under the bat.
+</p>
+
+<p>
+If you created your own sprites, you may need to run your program a 
+few times with different offsets to see which one works best.
+</p>
+
+
+<h2>Step 13 : Make the projectile move</h2>
+
+<p>
+Finally, we can start making the projectile move. There are two things
+that we need to keep track of:
+</p>
+
+<ul>
+<li>Do we currently have a projectile in motion?</li>
+<li>The current position of the projectile.</li>
+</ul>
+
+<p>
+The first item is useful because we don't want to bother updating the 
+projectile unless we actually have one moving around on the screen.
+The second item is needed to keep track of the projectile's current
+position.
+</p>
+
+<p>
+To keep track of these things, we need to declare some variables in 
+<tt>game_state.h</tt>:
+</p>
+
+<p class="filename"><code><b>game_state.h</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 40 - 48:</p>
+<pre class="code">
+	<disabled/>// The (x,y) location of the object representing the player.
+	<disabled/>int _xPlayer, _yPlayer;
+<mark type="plus"/>	
+<mark type="plus"/>	// Do we have a projectile in motion?
+<mark type="plus"/>	bool _has_projectile;
+<mark type="plus"/>	
+<mark type="plus"/>	// The (x,y) location of the projectile.
+<mark type="plus"/>	int _xBall, _yBall;
+<disabled/>};
+</pre>
+
+<p>
+And initialize them in <tt>game_state.cpp</tt> by changing:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 58 - 59:</p>
+<pre class="code">
+	// Initialize the projectile.
+	MoveObjectTo(kObj_Ball, 0, 0);
+</pre>
+
+<p>
+to:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 58 - 62:</p>
+<pre class="code">
+	<disabled/>// Initialize the projectile.
+<mark type="plus"/>	_xBall = 0;
+<mark type="plus"/>	_yBall = 0;
+<mark type="arrow"/>	MoveObjectTo(kObj_Ball, _xBall, _yBall);
+<mark type="plus"/>	_has_projectile = false;
+</pre>
+
+<h2>Step 14 : Build</h2>
+
+<p>
+Build to make sure you don't have any syntax errors.
+</p>
+
+<p>
+If you run the program now, it should behave exactly the same as
+the last time. But now we have the variables in place to make the
+projectile move.
+</p>
+
+
+<h2>Step 15 : Really make the projectile move</h2>
+
+<p>
+OK. Now we're really going to make the projectile move.
+</p>
+
+<p>
+First, find the code that handles the "A" button press:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 95 - 102:</p>
+<pre class="code">
+	// Handle the player pressing the 'A' button.
+	// We use CheckKeyPress() because we *don't* want the action to repeat
+	// unless the player presses the 'A' button multiple times.
+	if (CheckKeyPress(KEY_A)) {
+		// ToDo: Add code to respond to 'A' button press here.
+		MoveObjectTo(kObj_Ball, _xPlayer + 12, _yPlayer + 5);
+		ShowObject(kObj_Ball, true);
+	}
+</pre>
+
+<p>
+And change it to use the new variables that you just created:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 95 - 106:</p>
+<pre class="code">
+	<disabled/>// Handle the player pressing the 'A' button.
+	<disabled/>// We use CheckKeyPress() because we *don't* want the action to repeat
+	<disabled/>// unless the player presses the 'A' button multiple times.
+	<disabled/>if (CheckKeyPress(KEY_A)) {
+		<disabled/>// ToDo: Add code to respond to 'A' button press here.
+<mark type="plus"/>		_xBall = _xPlayer + 12;
+<mark type="plus"/>		_yBall = _yPlayer + 5;
+<mark type="arrow"/>		MoveObjectTo(kObj_Ball, _xBall, _yBall);
+<mark type="plus"/>		
+<mark type="plus"/>		_has_projectile = true;
+		<disabled/>ShowObject(kObj_Ball, true);
+	<disabled/>}
+</pre>
+
+<p>
+Now, just after this code, we can add some code to update the projectile's
+position:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 95 - 112:</p>
+<pre class="code">
+	<disabled/>// Handle the player pressing the 'A' button.
+	<disabled/>// We use CheckKeyPress() because we *don't* want the action to repeat
+	<disabled/>// unless the player presses the 'A' button multiple times.
+	<disabled/>if (CheckKeyPress(KEY_A)) {
+		<disabled/>// ToDo: Add code to respond to 'A' button press here.
+		<disabled/>_xBall = _xPlayer + 12;
+		<disabled/>_yBall = _yPlayer + 5;
+		<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+	<disabled/>
+		<disabled/>_has_projectile = true;
+		<disabled/>ShowObject(kObj_Ball, true);
+	<disabled/>}
+<mark type="plus"/>	
+<mark type="plus"/>	if (_has_projectile) {
+<mark type="plus"/>		_xBall += 0;
+<mark type="plus"/>		_yBall += 1;
+<mark type="plus"/>		MoveObjectTo(kObj_Ball, _xBall, _yBall);
+<mark type="plus"/>	}
+</pre>
+
+<p>
+Here we're adding 1 to the ball's y-coordinate (<tt>_yBall</tt>) to make
+the ball move down. If you want your projectile to move <b>up</b>,
+you need to subtract 1 instead:
+</p>
+
+<pre class="code">
+		_xBall += 0;
+		_yBall -= 1;
+</pre>
+
+<p>
+To move your projectile right or left, you
+need to (respectively) add or subtract 1 from the x-coordinate. To move
+<b>right</b> use:
+</p>
+
+<pre class="code">
+		_xBall += 1;
+		_yBall += 0;
+</pre>
+
+<p>
+and to move <b>left</b>, use:
+</p>
+
+<pre class="code">
+		_xBall -= 1;
+		_yBall += 0;
+</pre>
+
+<h2>Step 16 : Build/Run</h2>
+
+<p>
+Build/run and you now have a working projectile
+</p>
+
+
+<p><img src="projectiles/ss_02.png" /></p>
+
+<p>
+Hmmm... There are 2 problems with our current projectiles:
+</p>
+
+<ul>
+<li>If you press "A" multiple times, the projectile resets back
+	to the player's location.</li>
+<li>If you wait after pressing "A" (and don't press "A" again), the
+	projectile will go off the screen and eventually return from the
+	opposite side! If our bat example, the ball goes off the bottom 
+	of the screen and comes back at the top.
+</ul>
+
+<p>
+To fix this, we need to:
+</p>
+
+<ul>
+<li>Use <tt>_has_projectile</tt> to ensure that we don't launch a new
+	projectile if we alreay have one in-flight.</li>
+<li>Add a check to turn off the projectile once it goes outside
+	the screen bounds.</li>
+</ul>
+
+<h2>Step 17 : Only allow one projectile</h2>
+
+<p>
+To address the first problem, we need to use the <tt>_has_projectile</tt>
+variable and ignore the "A" button if there is already a projectile
+on the screen.
+</p>
+
+<p>
+Find:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 95 - 106:</p>
+<pre class="code">
+	// Handle the player pressing the 'A' button.
+	// We use CheckKeyPress() because we *don't* want the action to repeat
+	// unless the player presses the 'A' button multiple times.
+<mark type="arrow"/>	if (CheckKeyPress(KEY_A)) {
+		// ToDo: Add code to respond to 'A' button press here.
+		_xBall = _xPlayer + 12;
+		_yBall = _yPlayer + 5;
+		MoveObjectTo(kObj_Ball, _xBall, _yBall);
+
+		_has_projectile = true;
+		ShowObject(kObj_Ball, true);
+	}
+</pre>
+
+<p>
+and modify the <tt>if</tt> condition from:
+</p>
+
+<blockquote>
+If the player presses the "A" button
+</blockquote>
+
+<p>
+to:
+</p>
+
+<blockquote>
+If the player presses the "A" button AND we don't already have a projectile
+</blockquote>
+
+<p>
+The code to do this is as follows:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 95 - 106:</p>
+<pre class="code">
+	<disabled/>// Handle the player pressing the 'A' button.
+	<disabled/>// We use CheckKeyPress() because we *don't* want the action to repeat
+	<disabled/>// unless the player presses the 'A' button multiple times.
+<mark type="arrow"/>	if (CheckKeyPress(KEY_A) &amp;&amp; !_has_projectile) {
+		<disabled/>// ToDo: Add code to respond to 'A' button press here.
+		<disabled/>_xBall = _xPlayer + 12;
+		<disabled/>_yBall = _yPlayer + 5;
+		<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+	<disabled/>
+		<disabled/>_has_projectile = true;
+		<disabled/>ShowObject(kObj_Ball, true);
+	<disabled/>}
+</pre>
+
+<h2>Step 18 : Build/Run</h2>
+
+<p>
+Build/run and you can now fire off only 1 projectile which will then
+wrap around the screen and come out the other side.
+</p>
+
+<p>
+Once you fire off your first projectile, you cannot launch another one.
+We'll fix that in the next (the final!) step.
+</p>
+
+
+<h2>Step 19 : Turn off projectile when it exits screen</h2>
+
+<p>
+The last thing we need to do is to turn off the projectile when it
+exits the screen. This is similar to the
+<a href="screen_bounds.html">Screen bounds</a>
+tutorial except that we're detecting objects leaving the screen instead
+of constraining them within the screen.
+</p>
+
+<p>
+To do this, we modify the code that moves the projectile:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 108 - 112:</p>
+<pre class="code">
+	if (_has_projectile) {
+		_xBall += 0;
+		_yBall += 1;
+		MoveObjectTo(kObj_Ball, _xBall, _yBall);
+	}
+</pre>
+
+<p>
+...and add code to check if the projectile has left the screen:
+</p>
+
+<p class="filename"><code><b>game_state.cpp</b></code>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Lines 108 - 125:</p>
+<pre class="code">
+	<disabled/>if (_has_projectile) {
+		<disabled/>_xBall += 0;
+		<disabled/>_yBall += 1;
+		<disabled/>MoveObjectTo(kObj_Ball, _xBall, _yBall);
+<mark type="plus"/>
+<mark type="plus"/>		// Get the width/height of the projectile.
+<mark type="plus"/>		int width, height;
+<mark type="plus"/>		GetObjectSize(kObj_Ball, &amp;width, &amp;height);
+<mark type="plus"/>
+<mark type="plus"/>		// Turn off the projectile when it leaves the screen.
+<mark type="plus"/>		if (_xBall &lt; -width
+<mark type="plus"/>				|| _xBall &gt; SCREEN_WIDTH
+<mark type="plus"/>				|| _yBall &lt; -height
+<mark type="plus"/>				|| _yBall &gt; SCREEN_HEIGHT) {
+<mark type="plus"/>			ShowObject(kObj_Ball, false);
+<mark type="plus"/>			_has_projectile = false;
+<mark type="plus"/>		}
+	<disabled/>}
+</pre>
+
+<p>
+As with the
+<a href="screen_bounds.html">Screen bounds</a>
+tutorial, we need to take the width and height of the projectile into 
+account so that we remove the projectile only when it has completely
+left the screen.
+</p>
+
+<h2>Step 20 : Build/Run</h2>
+
+<p>
+Build/run and now your projectile (finally) works as intended.
+</p>
+
+
+<h2>Finished!</h2>
+
+<p>
+You're done.
+</p>
+
+<p>
+What about multiple projectiles at the same time? We'll get to that
+in a later tutorial - we need to introduce some more programming
+concepts before we can do that.
+</p>
+
+<div id="filelink_bkgd"><div id="filelink">
+<h1>Links to completed project</h1>
+<p>GBA:</p>
+<ul>
+<li><a href="projectiles/gba/game_state.h">game_state.h</a></li>
+<li><a href="projectiles/gba/game_state.cpp">game_state.cpp</a></li>
+<li><a href="projectiles/gba/projectile.gba">projectile.gba</a></li>
+</ul>
+<p>NDS:</p>
+<ul>
+<li><a href="projectiles/nds/game_state.h">game_state.h</a></li>
+<li><a href="projectiles/nds/game_state.cpp">game_state.cpp</a></li>
+<li><a href="projectiles/nds/projectile.nds">projectile.nds</a></li>
+</ul>
+</div></div>
+
+<div id="footer_bkgd"><div id="footer">
+<p>Copyright &copy;2009 Gary Kacmarcik</p>
+</div></div>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1163903-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

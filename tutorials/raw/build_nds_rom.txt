@@ -1,0 +1,93 @@
+NAME build_nds_rom
+TITLE Creating an NDS ROM File
+PROJECT_NAME none
+CATEGORY Getting Started
+AUTHOR Copyright &copy;2009 Gary Kacmarcik
+
+<p>
+If you want to create an NDS ROM file instead of a GBA ROM, then you 
+need to change the platform to NDS so that Spritely will generate NDS
+code instead of GBA code.
+</p>
+
+<hr/>
+
+# =================================================================
+STEP Set Platform to NDS
+# =================================================================
+
+<p>
+In Spritely, set the platform to NDS by selecting "NDS" in the "Platform"
+submenu of the "Project" menu:.
+</p>
+
+IMAGE platform_nds.png
+
+# =================================================================
+STEP Edit project
+# =================================================================
+
+<p>
+When you're creating a NDS project, almost all of the tools are exactly the
+same as when you're creating a GBA project. However, there are a few
+differences.
+</p>
+
+<p>
+The big difference is that the NDS screen size is larger than that of
+the GBA. The NDS screens are each 32x24 tiles (256x192 pixels) whereas
+the GBA screen is 20x30 tiles (240x160 pixels).
+</p>
+
+IMAGE screen_sizes.png
+
+<p>
+Spritely shows 32x32 tiles in the background map editor because that's
+how many tiles the GBA/NDS can store internally for the background map.
+The bottom 8 rows of tiles (12 rows on the GBA) are not visible on the NDS
+screen, but they will be useful once we we learn how to scroll the background
+in a later tutorial.
+</p>
+
+# =================================================================
+STEP Export project
+# =================================================================
+
+<p>
+Export your project as you normally would. When the platform is set
+to NDS, it will export NDS code instead of GBA code.
+</p>
+
+<p>
+These code differences are minor and all of the tutorials will work for
+either GBA or NDS projects (unless otherwise specified).
+</p>
+
+# =================================================================
+STEP Create ROM file
+# =================================================================
+
+<p>
+Now you can create the ROM file exactly the same way as you did
+for the GBA ROM file. You can do this via the command line
+(as described in the
+TUTORIAL_LINK build_gba_rom Building a GBA ROM File
+tutorial) or using Programmer's Notepad (as described in the
+TUTORIAL_LINK using_pn Using Programmer's Notepad
+tutorial).
+</p>
+
+FINISH
+
+<p>
+If you open your project directory, you'll see the new files that were created.
+</p>
+
+<blockquote><tt>build/</tt> &mdash; This directory contains temporary files that the compiler used when building the ROM file. </blockquote>
+<blockquote><tt>mygame.elf</tt> &mdash; This is another temporary file.</blockquote>
+<blockquote><tt>mygame.arm9</tt> &mdash; This is yet another temporary file.</blockquote>
+<blockquote><tt>mygame.nds</tt> &mdash; This is the NDS ROM file that contains your game!</blockquote>
+
+<p>
+You're now ready to run your ROM and see how your sprite looks.
+</p> 
