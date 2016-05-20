@@ -43,5 +43,5 @@ and allow you to see how the professionals create and animate their sprites.
 
 ![](http://garykac.github.io/spritely/images/bm_gfx_rsrc/vgmaps_mvdk2_6-1.png)
 
-(Video Game Maps)[http://www.vgmaps.com/] has a number of background maps extracted from
+[Video Game Maps](http://www.vgmaps.com/) has a number of background maps extracted from
 different games. This is a great reference when you're creating your own background maps.
