@@ -21,7 +21,6 @@ You can download the [latest version (v0.14.22) of Spritely](https://github.com/
 
 A [set of basic tutorials](http://garykac.github.io/spritely/tutorials/index.html) is also available.
 
-For suggestions/bug-reports, go to the Issues tab and edit an existing entry or
-add a new one. Send other comments to ɯoɔ˙ןıɐɯƃ@ɔɐʞʎɹɐƃ - please include
-"spritely" in the subject line.
-
+For suggestions/bug-reports, go to the [Issues](https://github.com/garykac/spritely/issues) tab and
+add a new entry (or comment on an existing one).
+Send other comments to ɯoɔ˙ןıɐɯƃ@ɔɐʞʎɹɐƃ - please include "spritely" in the subject line.
